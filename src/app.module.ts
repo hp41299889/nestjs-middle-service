@@ -7,13 +7,11 @@ import { join } from 'path';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { ApiModule } from './api/api.module';
-import { ThingsboardModule } from './thingsboard/thingsboard.module';
 import { RabbitmqClientModule } from './rabbitmq-client/rabbitmq-client.module';
 
 @Module({
   imports: [
     ApiModule,
-    ThingsboardModule,
     MulterModule.register({
       dest: './upload'
     }),

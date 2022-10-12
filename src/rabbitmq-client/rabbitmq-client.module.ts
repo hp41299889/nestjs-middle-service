@@ -1,6 +1,7 @@
 import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
+
 import { RabbitmqClientController } from './rabbitmq-client.controller';
 import { RabbitmqClientService } from './rabbitmq-client.service';
 

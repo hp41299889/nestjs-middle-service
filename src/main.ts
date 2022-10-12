@@ -1,10 +1,9 @@
 import { NestFactory } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { Transport, MicroserviceOptions } from '@nestjs/microservices';
-
-import { join } from 'path';
-import { AppModule } from './app.module';
 import { ConfigService } from '@nestjs/config';
+
+import { AppModule } from './app.module';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { cors: true });
@@ -15,11 +14,12 @@ async function bootstrap() {
   const host = configService.get('RABBITMQ_HOST');
   const queueName = configService.get('RABBITMQ_QUEUE_NAME');
 
-  await app.connectMicroservice<MicroserviceOptions>({
+  app.connectMicroservice<MicroserviceOptions>({
     transport: Transport.RMQ,
     options: {
       urls: [`amqp://${username}:${password}@${host}`],
       queue: queueName,
+      noAck: false,
       queueOptions: {
         durable: true
       }
