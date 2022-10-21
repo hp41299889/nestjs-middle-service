@@ -2,14 +2,13 @@ import { Module } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 
-import { AppConfigModule } from 'src/config/app.config.module';
-import { RabbitmqClientController } from './rabbitmq-client.controller';
-import { RabbitmqClientService } from './rabbitmq-client.service';
+import { RabbitmqService } from './rabbitmq.service';
 import { RabbitmqConfig } from '../config/interface';
+import { RabbitmqController } from './rabbitmq.controller';
 
 @Module({
   imports: [ConfigModule],
-  controllers: [RabbitmqClientController],
+  controllers: [RabbitmqController],
   providers: [
     {
       provide: 'LNT_MiddleService',
@@ -30,7 +29,7 @@ import { RabbitmqConfig } from '../config/interface';
       },
       inject: [ConfigService]
     },
-    RabbitmqClientService
-  ]
+    RabbitmqService
+  ],
 })
-export class RabbitmqClientModule { }
+export class RabbitmqModule { }

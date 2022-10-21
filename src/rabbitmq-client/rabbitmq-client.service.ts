@@ -7,7 +7,7 @@ import { RabbitmqClientMessageDto } from './rabbitmq-client.dto';
 @Injectable()
 export class RabbitmqClientService {
     constructor(
-        @Inject('danny_service') private readonly client: ClientProxy
+        @Inject('LNT_MiddleService') private readonly client: ClientProxy
     ) {
         this.client.connect();
     };
