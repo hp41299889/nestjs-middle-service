@@ -1,26 +1,31 @@
 import { Module } from '@nestjs/common';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 
 import { RabbitmqService } from './rabbitmq.service';
-import { RabbitmqConfig } from '../config/interface';
+import { RabbitmqConfig } from '../config/config.interface';
+import { AppConfigModule } from 'src/config/app.config.module';
 import { RabbitmqController } from './rabbitmq.controller';
+import { MathModule } from 'src/common/math/math.module';
 
 @Module({
-  imports: [ConfigModule],
+  imports: [
+    AppConfigModule,
+    MathModule
+  ],
   controllers: [RabbitmqController],
   providers: [
     {
-      provide: 'LNT_MiddleService',
+      provide: 'RabbitmqService',
       useFactory: (configService: ConfigService) => {
         const rabbitmqConfig: RabbitmqConfig = configService.get('rabbitmq');
-        const { rmqUsername, rmqPassword, rmqHost, rmqQueueName } = rabbitmqConfig;
+        const { rabbitmqUsername, rabbitmqPassword, rabbitmqHost, rabbitmqQueueName } = rabbitmqConfig;
 
         return ClientProxyFactory.create({
           transport: Transport.RMQ,
           options: {
-            urls: [`amqp://${rmqUsername}:${rmqPassword}@${rmqHost}`],
-            queue: rmqQueueName,
+            urls: [`amqp://${rabbitmqUsername}:${rabbitmqPassword}@${rabbitmqHost}`],
+            queue: rabbitmqQueueName,
             queueOptions: {
               durable: true
             }
@@ -29,7 +34,10 @@ import { RabbitmqController } from './rabbitmq.controller';
       },
       inject: [ConfigService]
     },
-    RabbitmqService
+    RabbitmqService,
   ],
+  exports: [
+    RabbitmqService
+  ]
 })
 export class RabbitmqModule { }

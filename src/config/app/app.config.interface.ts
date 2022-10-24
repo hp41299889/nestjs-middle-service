@@ -1,6 +1,7 @@
 export interface AppConfig {
     appEnv: string;
     appName: string;
-    appHost: string;
+    appPrefix: string;
     appPort: number;
+    appServices: string;
 };
