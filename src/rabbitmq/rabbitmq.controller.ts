@@ -9,17 +9,30 @@ export class RabbitmqController {
     ) { };
 
     @MessagePattern('perfectCubicSum')
-    async handleWaitCubeSum(@Payload() data: any, @Ctx() context: RmqContext) {
+    async handlePerfectCubicSum(@Payload() data: any, @Ctx() context: RmqContext) {
         const channel = context.getChannelRef();
         const originalMessage = context.getMessage();
-        console.log('***perfectCubicSum***');
-        console.log('payload', data);
-        console.log('originalMessage', originalMessage);
+        console.log('***MessagePattern got perfectCubicSum***');
+        console.log('***payload***', data);
 
         channel.ack(originalMessage);
         return new Promise(resolve =>
             setTimeout(() =>
                 resolve(this.rabbitmqService.perfectCubicSum(data)), 3000
+            ))
+    };
+
+    @MessagePattern('childProcess')
+    async handleChildProcess(@Payload() data: any, @Ctx() context: RmqContext) {
+        const channel = context.getChannelRef();
+        const originalMessage = context.getMessage();
+        console.log('***MessagePattern got childProcess***');
+        console.log('***payload***', data);
+
+        channel.ack(originalMessage);
+        return new Promise(resolve =>
+            setTimeout(() =>
+                resolve(this.rabbitmqService.childProcess(data)), 3000
             ))
     };
 

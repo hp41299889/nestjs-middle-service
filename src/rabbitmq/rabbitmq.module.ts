@@ -3,15 +3,16 @@ import { ConfigService } from '@nestjs/config';
 import { ClientProxyFactory, Transport } from '@nestjs/microservices';
 
 import { RabbitmqService } from './rabbitmq.service';
-import { RabbitmqConfig } from '../config/config.interface';
 import { AppConfigModule } from 'src/config/app.config.module';
 import { RabbitmqController } from './rabbitmq.controller';
 import { MathModule } from 'src/common/math/math.module';
+import { ChildProcessModule } from 'src/common/childProcess/child-process.module';
 
 @Module({
   imports: [
     AppConfigModule,
-    MathModule
+    MathModule,
+    ChildProcessModule
   ],
   controllers: [RabbitmqController],
   providers: [
