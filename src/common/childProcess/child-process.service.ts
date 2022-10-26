@@ -40,7 +40,7 @@ export class ChildProcessService {
         return new Promise((resolve, reject) => {
             const { script, name, message } = data;
             console.log('***runNode***');
-            exec(`node files/${name}.js`, (err, stdout, stderr) => {
+            const e = exec(`node files/${name}.js`, (err, stdout, stderr) => {
                 if (err) {
                     reject(`exec error\n${err}`);
                 } else {
@@ -48,10 +48,13 @@ export class ChildProcessService {
                     if (stderr) {
                         reject(`run node error\n${stderr}`);
                     } else {
+
                         resolve(stdout);
                     };
                 };
             });
+            console.log(e.pid);
+
         }).catch(err => err);
     };
 };
