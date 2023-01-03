@@ -1,0 +1,37 @@
+{
+  "enableScheduleService": "true",
+  "bossQueue": {
+    "IP": "192.168.36.51",
+    "port": "5672",
+    "account": "root",
+    "password": "a3345678",
+    "inputQueueName": "boss_queue_input",
+    "outputQueueName": "boss_queue_output"
+  },
+  "jobQueue": {
+    "IP": "192.168.36.51",
+    "port": "5672",
+    "account": "root",
+    "password": "a3345678",
+    "inputQueueName": "job_queue_input",
+    "outputQueueName": "job_queue_output"
+  },
+  "admin": {
+    "account": "admin",
+    "password": "admin"
+  },
+  "postgreSQL": {
+    "IP": "192.168.36.51",
+    "port": "5432",
+    "account": "postgres",
+    "password": "69507518",
+    "DBName": "test"
+  },
+  "mongoDB": {
+    "IP": "192.168.36.51",
+    "port": "27017",
+    "account": "admin",
+    "password": "a3345678",
+    "DBName": "test"
+  }
+}
