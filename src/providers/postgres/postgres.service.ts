@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
-import { JSScript } from 'src/models/postgres/jsScript/jsScript.entity';
+import { JSScript } from 'src/models/postgres/jsScript/jsScriptModel.entity';
 
 @Injectable()
 export class PostgresService implements TypeOrmOptionsFactory {

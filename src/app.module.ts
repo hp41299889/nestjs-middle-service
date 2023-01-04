@@ -11,4 +11,4 @@ import { ServiceModule } from './services/service.module';
   controllers: [],
   providers: [],
 })
-export class AppModule { }
+export class AppModule { };

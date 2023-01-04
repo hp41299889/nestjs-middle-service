@@ -9,7 +9,7 @@ export class JSExecutionLog {
     logID: string;
 
     @Prop()
-    scriptID: string;
+    scriptID: number;
 
     @Prop()
     scriptVersion: number;

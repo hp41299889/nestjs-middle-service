@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { JSScript } from "./jsScript.entity";
-import { JSScriptModelService } from "./jsScript.service";
+import { JSScript } from "./jsScriptModel.entity";
+import { JSScriptModelService } from "./jsScriptModel.service";
 
 @Module({
     imports: [TypeOrmModule.forFeature([JSScript])],
