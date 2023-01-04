@@ -1,9 +1,14 @@
+//packages
 import { Module } from '@nestjs/common';
 
-import { JSScriptService } from './jsscript.service';
-import { JSScriptController } from './jsscript.controller';
+//models
 import { JSScriptModelModule } from 'src/models/postgres/jsScript/jsScriptModel.module';
+//modules
 import { ChildJSModule } from 'src/job/childJS/childJS.module';
+//controllers
+import { JSScriptController } from './jsScript.controller';
+//services
+import { JSScriptService } from './jsScript.service';
 
 @Module({
   imports: [JSScriptModelModule, ChildJSModule],

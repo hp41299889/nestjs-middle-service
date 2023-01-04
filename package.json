@@ -1,8 +1,8 @@
 {
   "name": "middle-service",
-  "version": "0.0.1",
+  "version": "0.1.1",
   "description": "",
-  "author": "",
+  "author": "Danny",
   "private": true,
   "license": "UNLICENSED",
   "scripts": {

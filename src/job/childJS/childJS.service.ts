@@ -1,13 +1,16 @@
+//packages
 import { Injectable, Logger } from '@nestjs/common';
 import { join } from 'path';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
 import { exec } from 'child_process';
 
+//models
 import { JSScript } from 'src/models/postgres/jsScript/jsScriptModel.entity';
-import { JSScriptModelService } from 'src/models/postgres/jsScript/jsScriptModel.service';
-import { TestDto } from 'src/services/jsscript/jsscript.dto';
 import { CreateJSExecutionLogDto } from 'src/models/mongo/js-execution-log/jsExecutionLogModel.dto';
+import { JSScriptModelService } from 'src/models/postgres/jsScript/jsScriptModel.service';
 import { JSExecutionLogModelService } from 'src/models/mongo/js-execution-log/jsExecutionLogModel.service';
+//dtos
+import { TestDto } from 'src/services/jsScript/jsScript.dto';
 
 @Injectable()
 export class ChildJSService {
@@ -23,6 +26,7 @@ export class ChildJSService {
 
     async test(dto: TestDto): Promise<void> {
         try {
+            this.logger.debug('test');
             const jsScript = await this.jsScriptModel.readOneByID(dto.scriptID);
             const { scriptName, scriptVersion, scriptContent } = jsScript;
             const jsScriptDir = join(this.jsFileDir, scriptName);
@@ -33,42 +37,50 @@ export class ChildJSService {
             await this.createJSFile(jsFileDir, scriptContent);
             await this.executeChildJS(jsFileDir, dto.input, jsScript);
         } catch (err) {
+            this.logger.error('test fail');
             throw err;
         };
     };
 
     async createJSScriptDir(jsScriptDir: string): Promise<void> {
         try {
+            this.logger.debug('createJSScriptDir');
             if (!existsSync(jsScriptDir)) {
                 mkdirSync(jsScriptDir);
             };
         } catch (err) {
+            this.logger.error('createJSScriptDir fail');
             throw err;
         };
     };
 
     async createJSVersionDir(jsVersionDir: string): Promise<void> {
         try {
+            this.logger.debug('createJSVersionDir');
             if (!existsSync(jsVersionDir)) {
                 mkdirSync(jsVersionDir);
             };
         } catch (err) {
+            this.logger.error('createJSVersionDir fail');
             throw err;
         };
     };
 
     async createJSFile(jsFileDir: string, scriptContent: string): Promise<void> {
         try {
+            this.logger.debug('createJSFile');
             if (!existsSync(jsFileDir)) {
                 writeFileSync(jsFileDir, scriptContent);
             };
         } catch (err) {
+            this.logger.error('createJSFile fail');
             throw err;
         };
     };
 
     async executeChildJS(jsFileDir: string, input: object, jsScript: JSScript) {
         try {
+            this.logger.debug('executeChildJS');
             const childLogger = new Logger(`${jsScript.scriptName}_V${jsScript.scriptVersion}`);
             const cmd = `node ${jsFileDir} `;
             const cmdArgs = await this.addArgs(cmd, input);
@@ -124,17 +136,20 @@ export class ChildJSService {
             });
             return child;
         } catch (err) {
+            this.logger.error('executeChildJS fail');
             throw err;
         };
     };
 
     async addArgs(cmd: string, input: object): Promise<string> {
         try {
+            this.logger.debug('addArgs');
             Object.keys(input).forEach(key => {
                 cmd += `--${key}=${input[key]} `;
             });
             return cmd;
         } catch (err) {
+            this.logger.error('addArgs fail');
             throw err;
         };
     };

@@ -1,8 +1,11 @@
+//packages
 import { Controller, Logger, Post, Get, Patch, Delete, Body, Res } from '@nestjs/common';
 import { Response } from 'express';
 
-import { CreateOneJSScriptDto, DeleteOneJSScriptByIDDto, ReadOneJSScriptByIDDto, TestDto, UpdateOneJSScriptByIDDto } from './jsscript.dto';
-import { JSScriptService } from './jsscript.service';
+//dtos
+import { CreateOneJSScriptDto, DeleteOneJSScriptByIDDto, ReadOneJSScriptByIDDto, TestDto, UpdateOneJSScriptByIDDto } from './jsScript.dto';
+//services
+import { JSScriptService } from './jsScript.service';
 
 @Controller('JSScript')
 export class JSScriptController {

@@ -1,9 +1,12 @@
+//packages
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { UpdateOneJSScriptByIDDto } from 'src/services/jsscript/jsscript.dto';
 import { Repository, UpdateResult, DeleteResult } from 'typeorm';
 
+//models
 import { JSScript } from './jsScriptModel.entity';
+//dtos
+import { UpdateOneJSScriptByIDDto } from 'src/services/jsScript/jsScript.dto';
 
 @Injectable()
 export class JSScriptModelService {

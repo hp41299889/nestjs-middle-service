@@ -1,9 +1,13 @@
+//packages
 import { Module } from '@nestjs/common';
-import { SetupService } from './setup.service';
+
+//controllers
 import { SetupController } from './setup.controller';
+//services
+import { SetupService } from './setup.service';
 
 @Module({
   providers: [SetupService],
   controllers: [SetupController]
 })
-export class SetupModule {}
+export class SetupModule { }

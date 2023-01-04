@@ -1,7 +1,8 @@
+//pcakages
 import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
-// import { JSExecutionLogModelModule } from 'src/models/mongo/js-execution-log/jsExecutionLogModel.module';
 
+//services
 import { MongoService } from './mongo.service';
 
 @Module({

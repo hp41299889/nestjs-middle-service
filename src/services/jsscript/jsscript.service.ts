@@ -1,10 +1,14 @@
+//packages
 import { Injectable, Logger } from '@nestjs/common';
-import { ChildJSService } from 'src/job/childJS/childJS.service';
+import { DeleteResult, UpdateResult } from 'typeorm';
 
+//models
 import { JSScript } from 'src/models/postgres/jsScript/jsScriptModel.entity';
 import { JSScriptModelService } from 'src/models/postgres/jsScript/jsScriptModel.service';
-import { DeleteResult, UpdateResult } from 'typeorm';
-import { CreateOneJSScriptDto, ReadOneJSScriptByIDDto, UpdateOneJSScriptByIDDto, DeleteOneJSScriptByIDDto, TestDto } from './jsscript.dto';
+//dtos
+import { CreateOneJSScriptDto, ReadOneJSScriptByIDDto, UpdateOneJSScriptByIDDto, DeleteOneJSScriptByIDDto, TestDto } from './jsScript.dto';
+//services
+import { ChildJSService } from 'src/job/childJS/childJS.service';
 
 @Injectable()
 export class JSScriptService {

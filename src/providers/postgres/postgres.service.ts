@@ -1,6 +1,8 @@
+//packages
 import { Injectable, Logger } from '@nestjs/common';
 import { TypeOrmOptionsFactory, TypeOrmModuleOptions } from '@nestjs/typeorm';
 
+//models
 import { JSScript } from 'src/models/postgres/jsScript/jsScriptModel.entity';
 
 @Injectable()

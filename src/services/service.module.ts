@@ -1,6 +1,8 @@
+//packages
 import { Module } from "@nestjs/common";
 
-import { JSScriptModule } from "./jsscript/jsscript.module";
+//modules
+import { JSScriptModule } from "./jsScript/jsScript.module";
 import { SetupModule } from './setup/setup.module';
 
 @Module({

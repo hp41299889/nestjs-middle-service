@@ -1,4 +1,5 @@
+//packages
 import { Controller } from '@nestjs/common';
 
 @Controller('setup')
-export class SetupController {}
+export class SetupController { };
