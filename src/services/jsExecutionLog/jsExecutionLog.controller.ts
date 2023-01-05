@@ -27,6 +27,7 @@ export class JSExecutionLogController {
                 }
             })
         } catch (err) {
+            this.logger.error('/JSExecutionLog/query fail');
             res.status(400).json({
                 status: 'fail',
                 result: {

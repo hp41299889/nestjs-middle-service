@@ -13,17 +13,21 @@ export class SetupService {
     private readonly logger = new Logger(SetupService.name);
     private readonly setupFile = join(process.cwd(), 'setup', 'setup.json');
 
-    async read() {
+    async read(): Promise<string> {
         try {
-            this.logger.debug(this.setupFile);
-            return readFileSync(this.setupFile, 'utf8');
+            this.logger.debug('read');
+            const setup = readFileSync(this.setupFile, 'utf8');
+            return JSON.parse(setup);
         } catch (err) {
+            this.logger.error('read fail');
+            this.logger.error(err);
             throw err;
         };
     };
 
-    async postgresConnectTest(dto: DBConnectionDto) {
+    async postgresConnectTest(dto: DBConnectionDto): Promise<string> {
         try {
+            this.logger.debug('postgresConnectTest');
             const { account, password, IP, port, DBName } = dto;
             const datasource = new DataSource({
                 type: 'postgres',
@@ -35,7 +39,6 @@ export class SetupService {
             });
             return await datasource.initialize()
                 .then(async connection => {
-                    this.logger.debug('postgresConnectTest success');
                     await connection.destroy();
                     return 'postgresConnectTest success';
                 }).catch(err => {
@@ -43,12 +46,15 @@ export class SetupService {
                     throw err;
                 });
         } catch (err) {
+            this.logger.error('postgresConnectTest fail');
+            this.logger.error(err);
             throw err;
         };
     };
 
-    async mongoConnectTest(dto: DBConnectionDto) {
+    async mongoConnectTest(dto: DBConnectionDto): Promise<string> {
         try {
+            this.logger.debug('mongoConnectTest');
             const { account, password, IP, port, DBName } = dto;
             const datasource = new DataSource({
                 type: 'mongodb',
@@ -61,7 +67,6 @@ export class SetupService {
             });
             return await datasource.initialize()
                 .then(async connection => {
-                    this.logger.debug('mongoConnectTest success');
                     await connection.destroy();
                     return 'mongoConnectTest success';
                 }).catch(err => {
@@ -69,6 +74,8 @@ export class SetupService {
                     throw err;
                 });
         } catch (err) {
+            this.logger.error('mongoConnectTest fail');
+            this.logger.error(err);
             throw err;
         };
     };

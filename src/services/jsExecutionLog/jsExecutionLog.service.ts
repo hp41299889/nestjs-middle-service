@@ -19,6 +19,8 @@ export class JSExecutionLogService {
             this.logger.debug('query');
             return await this.jsScriptModel.findAll();
         } catch (err) {
+            this.logger.error('query fail');
+            this.logger.error(err);
             throw err;
         };
     };

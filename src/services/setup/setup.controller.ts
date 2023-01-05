@@ -16,16 +16,18 @@ export class SetupController {
     private readonly logger = new Logger(SetupController.name);
 
     @Get('read')
-    async read(@Res() res: Response) {
+    async read(@Res() res: Response): Promise<void> {
         try {
+            this.logger.debug('/Setup/read');
             const result = await this.setupService.read();
             res.status(200).json({
                 status: 'success',
                 result: {
-                    data: JSON.parse(result)
+                    data: result
                 }
             });
         } catch (err) {
+            this.logger.error('/Setup/read fail');
             res.status(400).json({
                 status: 'fail',
                 result: {
@@ -36,8 +38,9 @@ export class SetupController {
     };
 
     @Post('postgresConnectTest')
-    async postgresConnectTest(@Res() res: Response, @Body() dto: DBConnectionDto) {
+    async postgresConnectTest(@Res() res: Response, @Body() dto: DBConnectionDto): Promise<void> {
         try {
+            this.logger.debug('/Setup/postgresConnectTest');
             const result = await this.setupService.postgresConnectTest(dto);
             res.status(200).json({
                 status: 'success',
@@ -46,6 +49,7 @@ export class SetupController {
                 }
             });
         } catch (err) {
+            this.logger.error('/Setup/postgresConnectTest fail');
             res.status(400).json({
                 status: 'fail',
                 result: {
@@ -56,8 +60,9 @@ export class SetupController {
     };
 
     @Post('mongoConnectTest')
-    async mongoConnectTest(@Res() res: Response, @Body() dto: DBConnectionDto) {
+    async mongoConnectTest(@Res() res: Response, @Body() dto: DBConnectionDto): Promise<void> {
         try {
+            this.logger.debug('/Setup/mongoConnectTest');
             const result = await this.setupService.mongoConnectTest(dto);
             res.status(200).json({
                 status: 'success',
@@ -66,6 +71,7 @@ export class SetupController {
                 }
             });
         } catch (err) {
+            this.logger.error('/Setup/mongoConnectTest fail');
             res.status(400).json({
                 status: 'fail',
                 result: {
