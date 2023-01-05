@@ -28,4 +28,16 @@ export class JSExecutionLogModelService {
             throw err;
         };
     };
+
+    async findAll() {
+        try {
+            this.logger.debug('findAll');
+            const docs = await this.jsExecutionLogModel.find().exec();
+            this.logger.debug(docs);
+            return docs;
+        } catch (err) {
+            this.logger.error(err);
+            throw err;
+        };
+    };
 };

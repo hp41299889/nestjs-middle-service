@@ -13,7 +13,7 @@ class RMQConnectionDto extends ConnectionDto {
     outputQueueName: string;
 };
 
-class DBConnectionDto extends ConnectionDto {
+export class DBConnectionDto extends ConnectionDto {
     DBName: string;
 };
 
