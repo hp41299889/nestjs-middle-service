@@ -15,6 +15,27 @@ export class AuthController {
 
     private readonly logger = new Logger(AuthController.name);
 
+    //TODO render view
+    @Get('view')
+    async view(@Res() res: Response, @Session() session: Record<string, any>) {
+        try {
+            this.logger.debug('/Auth/view');
+            if (!session.token) {
+                res.status(200).render('');
+            } else {
+                res.status(200).render('');
+            };
+        } catch (err) {
+            this.logger.error('/Auth/view fail');
+            res.status(400).json({
+                status: 'fail',
+                result: {
+                    error: err
+                }
+            });
+        };
+    };
+
     @Post('login')
     async login(@Res() res: Response, @Body() dto: LoginDto, @Session() session: Record<string, any>) {
         try {

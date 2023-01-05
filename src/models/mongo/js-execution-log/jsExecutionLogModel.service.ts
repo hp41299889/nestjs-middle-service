@@ -40,4 +40,21 @@ export class JSExecutionLogModelService {
             throw err;
         };
     };
+
+    async findTimePeriod(startTime: number, endTime: number) {
+        try {
+            this.logger.debug('findTimePeriod');
+            this.logger.debug(new Date(startTime));
+            this.logger.debug(new Date(endTime));
+            const docs = await this.jsExecutionLogModel
+                .find()
+                .where('processDatetime').gt(startTime).lt(endTime)
+                .exec();
+            return docs;
+        } catch (err) {
+            this.logger.error('findTimePeriod fail');
+            this.logger.error(err);
+            throw err;
+        };
+    };
 };

@@ -16,7 +16,7 @@ import { TestDto } from 'src/services/jsScript/jsScript.dto';
 export class ChildJSService {
     constructor(
         private readonly jsScriptModel: JSScriptModelService,
-        private readonly jsExecutionLogModel: JSExecutionLogModelService
+        private readonly jsExecutionLogModel: JSExecutionLogModelService,
     ) { };
 
     private readonly logger = new Logger(ChildJSService.name);
@@ -42,7 +42,7 @@ export class ChildJSService {
         };
     };
 
-    async createJSScriptDir(jsScriptDir: string): Promise<void> {
+    private async createJSScriptDir(jsScriptDir: string): Promise<void> {
         try {
             this.logger.debug('createJSScriptDir');
             if (!existsSync(jsScriptDir)) {
@@ -54,7 +54,7 @@ export class ChildJSService {
         };
     };
 
-    async createJSVersionDir(jsVersionDir: string): Promise<void> {
+    private async createJSVersionDir(jsVersionDir: string): Promise<void> {
         try {
             this.logger.debug('createJSVersionDir');
             if (!existsSync(jsVersionDir)) {
@@ -66,7 +66,7 @@ export class ChildJSService {
         };
     };
 
-    async createJSFile(jsFileDir: string, scriptContent: string): Promise<void> {
+    private async createJSFile(jsFileDir: string, scriptContent: string): Promise<void> {
         try {
             this.logger.debug('createJSFile');
             if (!existsSync(jsFileDir)) {
@@ -78,7 +78,7 @@ export class ChildJSService {
         };
     };
 
-    async executeChildJS(jsFileDir: string, input: object, jsScript: JSScript) {
+    private async executeChildJS(jsFileDir: string, input: object, jsScript: JSScript) {
         try {
             this.logger.debug('executeChildJS');
             const childLogger = new Logger(`${jsScript.scriptName}_V${jsScript.scriptVersion}`);
@@ -141,7 +141,7 @@ export class ChildJSService {
         };
     };
 
-    async addArgs(cmd: string, input: object): Promise<string> {
+    private async addArgs(cmd: string, input: object): Promise<string> {
         try {
             this.logger.debug('addArgs');
             Object.keys(input).forEach(key => {

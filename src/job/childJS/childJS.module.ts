@@ -10,7 +10,7 @@ import { ChildJSService } from './childJS.service';
 @Module({
     imports: [
         JSScriptModelModule,
-        JSExecutionLogModelModule
+        JSExecutionLogModelModule,
     ],
     providers: [ChildJSService],
     exports: [ChildJSService]

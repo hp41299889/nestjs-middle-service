@@ -1,5 +1,5 @@
 //packages
-import { Controller, Logger, Post, Get, Patch, Delete, Body, Res } from '@nestjs/common';
+import { Controller, Logger, Post, Get, Patch, Delete, Body, Res, Session } from '@nestjs/common';
 import { Response } from 'express';
 
 //dtos
@@ -14,6 +14,27 @@ export class JSScriptController {
     ) { };
 
     private readonly logger = new Logger(JSScriptController.name);
+
+    //TODO render view
+    @Get('view')
+    async view(@Res() res: Response, @Session() session: Record<string, any>) {
+        try {
+            this.logger.debug('/JSScript/view');
+            if (!session.token) {
+                res.status(200).render('');
+            } else {
+                res.status(200).render('');
+            };
+        } catch (err) {
+            this.logger.error('/JSScript/view fail');
+            res.status(400).json({
+                status: 'fail',
+                result: {
+                    error: err
+                }
+            });
+        };
+    };
 
     @Post('/create')
     async createOne(@Res() res: Response, @Body() dto: CreateOneJSScriptDto): Promise<void> {

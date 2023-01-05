@@ -1,5 +1,5 @@
 //packages
-import { Controller, Logger, Get, Res, Post, Body } from '@nestjs/common';
+import { Controller, Logger, Get, Res, Post, Body, Session } from '@nestjs/common';
 import { Response } from 'express';
 
 //dtos
@@ -14,6 +14,27 @@ export class SetupController {
     ) { };
 
     private readonly logger = new Logger(SetupController.name);
+
+    //TODO render view
+    @Get('view')
+    async view(@Res() res: Response, @Session() session: Record<string, any>) {
+        try {
+            this.logger.debug('/Setup/view');
+            if (!session.token) {
+                res.status(200).render('');
+            } else {
+                res.status(200).render('');
+            };
+        } catch (err) {
+            this.logger.error('/Setup/view fail');
+            res.status(400).json({
+                status: 'fail',
+                result: {
+                    error: err
+                }
+            });
+        };
+    };
 
     @Get('read')
     async read(@Res() res: Response): Promise<void> {
