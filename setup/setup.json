@@ -25,7 +25,7 @@
     "port": "5432",
     "account": "postgres",
     "password": "69507518",
-    "DBName": "test"
+    "DBName": "middle-service"
   },
   "mongoDB": {
     "IP": "192.168.36.51",
