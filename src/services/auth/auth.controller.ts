@@ -17,7 +17,7 @@ export class AuthController {
 
     //TODO render view
     @Get('view')
-    async view(@Res() res: Response, @Session() session: Record<string, any>) {
+    async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/Auth/view');
             if (!session.token) {
@@ -37,12 +37,12 @@ export class AuthController {
     };
 
     @Post('login')
-    async login(@Res() res: Response, @Body() dto: LoginDto, @Session() session: Record<string, any>) {
+    async login(@Res() res: Response, @Body() dto: LoginDto, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/Auth/login');
             if (!session.token) {
-                session.token = dto.account;
                 const result = await this.authService.login(dto);
+                session.token = dto.account;
                 res.status(200).json({
                     status: 'success',
                     result: {
@@ -69,7 +69,7 @@ export class AuthController {
     };
 
     @Get('logout')
-    async logout(@Req() req: Request, @Res() res: Response, @Session() session: Record<string, any>) {
+    async logout(@Req() req: Request, @Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/Auth/login');
             if (!session.token) {

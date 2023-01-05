@@ -5,7 +5,7 @@ import { Injectable, Logger } from '@nestjs/common';
 export class TimeHelperService {
     private readonly logger = new Logger(TimeHelperService.name);
 
-    async dateStringToNowTimeString(dateString: string) {
+    async dateStringToNowTimeString(dateString: string): Promise<Date> {
         //TODO nowTime or just choose date
         try {
             this.logger.debug('dateStringToNowTimeString');

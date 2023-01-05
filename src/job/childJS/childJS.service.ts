@@ -78,7 +78,7 @@ export class ChildJSService {
         };
     };
 
-    private async executeChildJS(jsFileDir: string, input: object, jsScript: JSScript) {
+    private async executeChildJS(jsFileDir: string, input: object, jsScript: JSScript): Promise<void> {
         try {
             this.logger.debug('executeChildJS');
             const childLogger = new Logger(`${jsScript.scriptName}_V${jsScript.scriptVersion}`);
@@ -134,7 +134,6 @@ export class ChildJSService {
                 };
                 this.jsExecutionLogModel.createOne(createJSExecutionLogDto);
             });
-            return child;
         } catch (err) {
             this.logger.error('executeChildJS fail');
             throw err;

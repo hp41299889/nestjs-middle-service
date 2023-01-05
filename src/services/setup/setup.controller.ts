@@ -1,9 +1,9 @@
 //packages
-import { Controller, Logger, Get, Res, Post, Body, Session } from '@nestjs/common';
+import { Controller, Logger, Get, Res, Post, Body, Session, Patch } from '@nestjs/common';
 import { Response } from 'express';
 
 //dtos
-import { DBConnectionDto } from './setup.dto';
+import { DBConnectionDto, SetupSaveDto } from './setup.dto';
 //services
 import { SetupService } from './setup.service';
 
@@ -17,7 +17,7 @@ export class SetupController {
 
     //TODO render view
     @Get('view')
-    async view(@Res() res: Response, @Session() session: Record<string, any>) {
+    async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/Setup/view');
             if (!session.token) {
@@ -93,6 +93,28 @@ export class SetupController {
             });
         } catch (err) {
             this.logger.error('/Setup/mongoConnectTest fail');
+            res.status(400).json({
+                status: 'fail',
+                result: {
+                    error: err
+                }
+            });
+        };
+    };
+
+    @Patch('save')
+    async save(@Res() res: Response, @Body() dto: SetupSaveDto): Promise<void> {
+        try {
+            this.logger.debug('/Setup/save');
+            const result = await this.setupService.save(dto);
+            res.status(200).json({
+                status: 'success',
+                result: {
+                    data: result
+                }
+            });
+        } catch (err) {
+            this.logger.error('/Setup/save fail');
             res.status(400).json({
                 status: 'fail',
                 result: {

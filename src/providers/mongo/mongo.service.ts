@@ -2,17 +2,25 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { MongooseOptionsFactory, MongooseModuleOptions } from '@nestjs/mongoose';
 
+//dtos
+import { DBConnectionDto } from 'src/services/setup/setup.dto';
+//services
+import { SetupJsonService } from 'src/utils/setupJson/setupJson.service';
+
 @Injectable()
 export class MongoService implements MongooseOptionsFactory {
-
+    constructor(
+        private readonly setupJsonService: SetupJsonService
+    ) { };
     private readonly logger = new Logger(MongoService.name);
 
-    createMongooseOptions(): MongooseModuleOptions {
+    async createMongooseOptions(): Promise<MongooseModuleOptions> {
         try {
             this.logger.debug('Creating connection for mongo');
-            return {
-                uri: 'mongodb://admin:a3345678@192.168.36.51:27017/test'
-            };
+            const setup: DBConnectionDto = await this.setupJsonService.readByKey('mongoDB');
+            const { account, password, IP, port, DBName } = setup;
+            const uri = `mongodb://${account}:${password}@${IP}:${port}/${DBName}`;
+            return { uri };
         } catch (err) {
             this.logger.error('Creating connection for mongo fail');
             throw err;

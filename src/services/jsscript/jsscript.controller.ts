@@ -17,7 +17,7 @@ export class JSScriptController {
 
     //TODO render view
     @Get('view')
-    async view(@Res() res: Response, @Session() session: Record<string, any>) {
+    async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/JSScript/view');
             if (!session.token) {

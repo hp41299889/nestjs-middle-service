@@ -17,7 +17,7 @@ export class JSExecutionLogController {
 
     //TODO render view
     @Get('view')
-    async view(@Res() res: Response, @Session() session: Record<string, any>) {
+    async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/JSExecutionLog/view');
             if (!session.token) {
@@ -37,7 +37,7 @@ export class JSExecutionLogController {
     };
 
     @Post('/query')
-    async query(@Res() res: Response, @Body() dto: QueryJSExecutionLogDto) {
+    async query(@Res() res: Response, @Body() dto: QueryJSExecutionLogDto): Promise<void> {
         try {
             this.logger.debug('/JSExecutionLog/query');
             const result = await this.jsExecutionLogService.query(dto);

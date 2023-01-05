@@ -1,22 +1,23 @@
 //packages
 import { Injectable, Logger } from '@nestjs/common';
-import { join } from 'path';
-import { readFileSync } from 'fs';
 import { Request } from 'express';
 
 //dtos
-import { LoginDto, SetupSaveDto } from '../setup/setup.dto';
+import { LoginDto, } from '../setup/setup.dto';
+//services
+import { SetupJsonService } from 'src/utils/setupJson/setupJson.service';
 
 @Injectable()
 export class AuthService {
-
+    constructor(
+        private readonly setupJsonService: SetupJsonService
+    ) { };
     private readonly logger = new Logger(AuthService.name);
-    private readonly setupFile = join(process.cwd(), 'setup', 'setup.json');
 
-    async login(dto: LoginDto) {
+    async login(dto: LoginDto): Promise<string> {
         try {
             this.logger.debug('login');
-            const admin = await this.readSetupAdmin();
+            const admin: LoginDto = await this.setupJsonService.readByKey('admin');
             const { account, password } = admin;
             await this.checkAccount(dto.account, account);
             await this.checkPassword(dto.password, password);
@@ -28,7 +29,7 @@ export class AuthService {
         };
     };
 
-    async logout(req: Request) {
+    async logout(req: Request): Promise<string> {
         try {
             this.logger.debug('logout');
             req.session.destroy(() => {
@@ -42,7 +43,7 @@ export class AuthService {
         };
     };
 
-    private async checkAccount(client: string, account: string) {
+    private async checkAccount(client: string, account: string): Promise<void> {
         try {
             this.logger.debug('checkAccount');
             if (client != account) {
@@ -55,7 +56,7 @@ export class AuthService {
         };
     };
 
-    private async checkPassword(client: string, password: string) {
+    private async checkPassword(client: string, password: string): Promise<void> {
         try {
             this.logger.debug('checkPassword');
             if (client != password) {
@@ -63,19 +64,6 @@ export class AuthService {
             };
         } catch (err) {
             this.logger.error('checkPassword fail');
-            this.logger.error(err);
-            throw err;
-        };
-    };
-
-    private async readSetupAdmin(): Promise<LoginDto> {
-        try {
-            const setupFile = readFileSync(this.setupFile, 'utf8');
-            const setup: SetupSaveDto = JSON.parse(setupFile);
-            const { admin } = setup;
-            return admin;
-        } catch (err) {
-            this.logger.error('readSetup fail');
             this.logger.error(err);
             throw err;
         };

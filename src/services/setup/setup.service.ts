@@ -1,23 +1,24 @@
 //packages
 import { Injectable, Logger } from '@nestjs/common';
-import { readFileSync } from 'fs';
-import { join } from 'path';
 import { DataSource } from 'typeorm';
 
 //dtos
-import { DBConnectionDto } from './setup.dto';
+import { DBConnectionDto, SetupSaveDto } from './setup.dto';
+//services
+import { SetupJsonService } from 'src/utils/setupJson/setupJson.service';
 
 @Injectable()
 export class SetupService {
-
+    constructor(
+        private readonly setupJsonService: SetupJsonService
+    ) { };
     private readonly logger = new Logger(SetupService.name);
-    private readonly setupFile = join(process.cwd(), 'setup', 'setup.json');
 
     async read(): Promise<string> {
         try {
             this.logger.debug('read');
-            const setup = readFileSync(this.setupFile, 'utf8');
-            return JSON.parse(setup);
+            const json = await this.setupJsonService.read();
+            return json;
         } catch (err) {
             this.logger.error('read fail');
             this.logger.error(err);
@@ -75,6 +76,28 @@ export class SetupService {
                 });
         } catch (err) {
             this.logger.error('mongoConnectTest fail');
+            this.logger.error(err);
+            throw err;
+        };
+    };
+
+    async save(dto: SetupSaveDto): Promise<void> {
+        try {
+            this.logger.debug('save');
+            await this.setupJsonService.save(dto);
+            await this.restart();
+        } catch (err) {
+            this.logger.error('save fail');
+            this.logger.error(err);
+            throw err;
+        };
+    };
+
+    private async restart(): Promise<void> {
+        try {
+            this.logger.debug('file changed, server restarting');
+        } catch (err) {
+            this.logger.error('restart fail');
             this.logger.error(err);
             throw err;
         };
