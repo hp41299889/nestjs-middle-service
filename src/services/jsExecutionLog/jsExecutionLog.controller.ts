@@ -6,10 +6,12 @@ import { Response } from 'express';
 import { QueryJSExecutionLogDto } from './jsExecutionLog.dto';
 //services
 import { JSExecutionLogService } from './jsExecutionLog.service';
+import { HttpResponseService } from 'src/utils/httpResponse/httpResponse.service';
 
 @Controller('JSExecutionLog')
 export class JSExecutionLogController {
     constructor(
+        private readonly httpResponseService: HttpResponseService,
         private readonly jsExecutionLogService: JSExecutionLogService
     ) { };
 
@@ -27,34 +29,21 @@ export class JSExecutionLogController {
             };
         } catch (err) {
             this.logger.error('/JSExecutionLog/view fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
-    @Post('/query')
+    @Post('query')
     async query(@Res() res: Response, @Body() dto: QueryJSExecutionLogDto): Promise<void> {
         try {
             this.logger.debug('/JSExecutionLog/query');
             const result = await this.jsExecutionLogService.query(dto);
-            res.status(200).json({
-                status: 'success',
-                result: {
-                    data: result
-                }
-            })
+            this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/JSExecutionLog/query fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 };

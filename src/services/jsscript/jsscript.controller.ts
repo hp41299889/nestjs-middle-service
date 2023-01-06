@@ -7,10 +7,12 @@ import { CreateOneJSScriptDto, DeleteOneJSScriptByIDDto, ReadOneJSScriptByIDDto,
 import { ChildJSDto } from 'src/job/childJS/childJS.dto';
 //services
 import { JSScriptService } from './jsScript.service';
+import { HttpResponseService } from 'src/utils/httpResponse/httpResponse.service';
 
 @Controller('JSScript')
 export class JSScriptController {
     constructor(
+        private readonly httpResponseService: HttpResponseService,
         private readonly jsScriptService: JSScriptService,
     ) { };
 
@@ -28,144 +30,86 @@ export class JSScriptController {
             };
         } catch (err) {
             this.logger.error('/JSScript/view fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
-    @Post('/create')
+    @Post('create')
     async createOne(@Res() res: Response, @Body() dto: CreateOneJSScriptDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/create');
             const result = await this.jsScriptService.createOne(dto);
-            res.status(201).json({
-                status: 'success',
-                result: {
-                    data: result
-                }
-            });
+            this.httpResponseService.success(res, 201, result);
         } catch (err) {
             this.logger.error('/JSScript/create fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
-    @Get('/readAll')
+    @Get('readAll')
     async readAll(@Res() res: Response): Promise<void> {
         try {
             this.logger.debug('/JSScript/readAll ');
             const result = await this.jsScriptService.readAll();
-            res.status(200).json({
-                status: 'success',
-                result: {
-                    data: result
-                }
-            });
+            this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/JSScript/readAll fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
-    @Get('/query')
+    @Get('query')
     async readOneByID(@Res() res: Response, @Body() dto: ReadOneJSScriptByIDDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/readOneByID');
             const result = await this.jsScriptService.readOneByID(dto);
-            res.status(200).json({
-                status: 'success',
-                result: {
-                    data: result
-                }
-            });
+            this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/JSScript/readOneByID fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
-    @Patch('/update')
+    @Patch('update')
     async updateOneByID(@Res() res: Response, @Body() dto: UpdateOneJSScriptByIDDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/update');
             const result = await this.jsScriptService.updateOneByID(dto);
-            res.status(200).json({
-                status: 'success',
-                result: {
-                    data: result
-                }
-            });
+            this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/JSScript/update fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
-    @Delete('/delete')
+    @Delete('delete')
     async deleteOneByID(@Res() res: Response, @Body() dto: DeleteOneJSScriptByIDDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/delete');
             const result = await this.jsScriptService.deleteOneByID(dto);
-            res.status(200).json({
-                status: 'success',
-                result: {
-                    data: result
-                }
-            });
+            this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/JSScript/delete fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
-    @Post('/test')
+    @Post('test')
     async test(@Res() res: Response, @Body() dto: ChildJSDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/test');
-            await this.jsScriptService.test(dto);
-            res.status(200).json({
-                status: 'success',
-                result: {
-                    data: 'child process executed'
-                }
-            });
+            await this.jsScriptService.testExecChildJS(dto);
+            this.httpResponseService.success(res, 200, 'childJS executed');
         } catch (err) {
             this.logger.error('/JSScript/test fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 };

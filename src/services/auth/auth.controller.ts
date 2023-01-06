@@ -6,10 +6,12 @@ import { Request, Response } from 'express';
 import { LoginDto } from '../setup/setup.dto';
 //services
 import { AuthService } from './auth.service';
+import { HttpResponseService } from 'src/utils/httpResponse/httpResponse.service';
 
 @Controller('Auth')
 export class AuthController {
     constructor(
+        private readonly httpResponseService: HttpResponseService,
         private readonly authService: AuthService
     ) { };
 
@@ -27,12 +29,8 @@ export class AuthController {
             };
         } catch (err) {
             this.logger.error('/Auth/view fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
@@ -43,28 +41,14 @@ export class AuthController {
             if (!session.token) {
                 const result = await this.authService.login(dto);
                 session.token = dto.account;
-                res.status(200).json({
-                    status: 'success',
-                    result: {
-                        data: result
-                    }
-                });
+                this.httpResponseService.success(res, 200, result);
             } else {
-                res.status(200).json({
-                    status: 'success',
-                    result: {
-                        data: 'session login success'
-                    }
-                });
+                this.httpResponseService.success(res, 200, 'session login success');
             };
         } catch (err) {
             this.logger.error('/Auth/login fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
@@ -76,21 +60,12 @@ export class AuthController {
                 throw 'you are not login yet';
             } else {
                 const result = await this.authService.logout(req);
-                res.status(200).json({
-                    status: 'success',
-                    result: {
-                        data: result
-                    }
-                });
+                this.httpResponseService.success(res, 200, result);
             };
         } catch (err) {
             this.logger.error('/Auth/logout fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 };

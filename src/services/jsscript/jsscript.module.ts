@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 //models
 import { JSScriptModelModule } from 'src/models/postgres/jsScript/jsScriptModel.module';
 //modules
+import { HttpResponseModule } from 'src/utils/httpResponse/httpResponse.module';
 import { ChildJSModule } from 'src/job/childJS/childJS.module';
 //controllers
 import { JSScriptController } from './jsScript.controller';
@@ -11,7 +12,7 @@ import { JSScriptController } from './jsScript.controller';
 import { JSScriptService } from './jsScript.service';
 
 @Module({
-  imports: [JSScriptModelModule, ChildJSModule],
+  imports: [HttpResponseModule, JSScriptModelModule, ChildJSModule],
   providers: [JSScriptService],
   controllers: [JSScriptController]
 })

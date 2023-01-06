@@ -6,10 +6,12 @@ import { Response } from 'express';
 import { DBConnectionDto, SetupSaveDto } from './setup.dto';
 //services
 import { SetupService } from './setup.service';
+import { HttpResponseService } from 'src/utils/httpResponse/httpResponse.service';
 
 @Controller('Setup')
 export class SetupController {
     constructor(
+        private readonly httpResponseService: HttpResponseService,
         private readonly setupService: SetupService
     ) { };
 
@@ -27,12 +29,8 @@ export class SetupController {
             };
         } catch (err) {
             this.logger.error('/Setup/view fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
@@ -41,20 +39,11 @@ export class SetupController {
         try {
             this.logger.debug('/Setup/read');
             const result = await this.setupService.read();
-            res.status(200).json({
-                status: 'success',
-                result: {
-                    data: result
-                }
-            });
+            this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/Setup/read fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
@@ -63,20 +52,11 @@ export class SetupController {
         try {
             this.logger.debug('/Setup/postgresConnectTest');
             const result = await this.setupService.postgresConnectTest(dto);
-            res.status(200).json({
-                status: 'success',
-                result: {
-                    data: result
-                }
-            });
+            this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/Setup/postgresConnectTest fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
@@ -85,20 +65,11 @@ export class SetupController {
         try {
             this.logger.debug('/Setup/mongoConnectTest');
             const result = await this.setupService.mongoConnectTest(dto);
-            res.status(200).json({
-                status: 'success',
-                result: {
-                    data: result
-                }
-            });
+            this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/Setup/mongoConnectTest fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 
@@ -107,20 +78,11 @@ export class SetupController {
         try {
             this.logger.debug('/Setup/save');
             const result = await this.setupService.save(dto);
-            res.status(200).json({
-                status: 'success',
-                result: {
-                    data: result
-                }
-            });
+            this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/Setup/save fail');
-            res.status(400).json({
-                status: 'fail',
-                result: {
-                    error: err
-                }
-            });
+            this.httpResponseService.fail(res, err);
+            throw err;
         };
     };
 };

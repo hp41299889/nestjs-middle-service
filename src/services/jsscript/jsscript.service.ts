@@ -84,11 +84,10 @@ export class JSScriptService {
         };
     };
 
-    async test(dto: ChildJSDto): Promise<void> {
+    async testExecChildJS(dto: ChildJSDto): Promise<void> {
         try {
             this.logger.debug('test');
-            const result = await this.childJSService.execChildJS(dto);
-            return result;
+            await this.childJSService.execChildJS(dto);
         } catch (err) {
             this.logger.error('test fail');
             throw err;

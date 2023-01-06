@@ -4,6 +4,7 @@ import { Module } from '@nestjs/common';
 //models
 import { JSExecutionLogModelModule } from 'src/models/mongo/js-execution-log/jsExecutionLogModel.module';
 //modules
+import { HttpResponseModule } from 'src/utils/httpResponse/httpResponse.module';
 import { TimeHelperModule } from 'src/utils/timeHelper/timeHelper.module';
 //controllers
 import { JSExecutionLogController } from './jsExecutionLog.controller';
@@ -11,7 +12,7 @@ import { JSExecutionLogController } from './jsExecutionLog.controller';
 import { JSExecutionLogService } from './jsExecutionLog.service';
 
 @Module({
-    imports: [JSExecutionLogModelModule, TimeHelperModule],
+    imports: [HttpResponseModule, JSExecutionLogModelModule, TimeHelperModule],
     controllers: [JSExecutionLogController],
     providers: [JSExecutionLogService]
 })
