@@ -24,7 +24,6 @@ export class AuthService {
             return 'login success';
         } catch (err) {
             this.logger.error('login fail');
-            this.logger.error(err);
             throw err;
         };
     };

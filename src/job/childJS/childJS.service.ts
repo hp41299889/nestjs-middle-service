@@ -9,7 +9,7 @@ import { CreateJSExecutionLogDto } from 'src/models/mongo/js-execution-log/jsExe
 import { JSScriptModelService } from 'src/models/postgres/jsScript/jsScriptModel.service';
 import { JSExecutionLogModelService } from 'src/models/mongo/js-execution-log/jsExecutionLogModel.service';
 //dtos
-import { TestDto } from 'src/services/jsScript/jsScript.dto';
+import { ChildJSDto } from './childJS.dto';
 //services
 import { ChildService } from '../child/child.service';
 
@@ -26,55 +26,31 @@ export class ChildJSService {
     private readonly encoding = 'BIG5';
     private readonly binaryEncoding = 'binary';
 
-    async test(dto: TestDto): Promise<void> {
+    async execChildJS(dto: ChildJSDto): Promise<void> {
         try {
-            this.logger.debug('test');
-            const { scriptID, input } = dto;
+            this.logger.debug('execChildJS');
+            const { scriptID, scriptVersion, input } = dto;
             const jsScript = await this.jsScriptModel.readOneByID(scriptID);
-            const { scriptName, scriptVersion, scriptContent, scriptPackage } = jsScript;
-            const jsScriptDir = join(this.jsFileDir, scriptName);
-            const jsVersionDir = join(jsScriptDir, scriptVersion.toString());
-            const jsFileDir = join(jsVersionDir, `${scriptName}.js`);
-            await this.createJSScriptDir(jsScriptDir);
-            await this.createJSVersionDir(jsVersionDir);
-            await this.createJSFile(jsFileDir, scriptContent);
-            await this.npmInit(jsVersionDir);
-            await this.npmInstall(jsVersionDir, scriptPackage);
-            await this.nodeRun(jsScript, jsVersionDir, input);
+            const { scriptName, scriptPackage } = jsScript;
+            const cwd = join(this.jsFileDir, scriptName, scriptVersion.toString());
+            const jsFile = join(cwd, `${scriptName}.js`);
+            await this.createJSFile(jsScript, jsFile);
+            await this.npmInit(cwd);
+            await this.npmInstall(cwd, scriptPackage);
+            await this.nodeRun(jsScript, scriptVersion, input);
         } catch (err) {
-            this.logger.error('test fail');
+            this.logger.error('execChildJS fail');
             throw err;
         };
     };
 
-    private async createJSScriptDir(jsScriptDir: string): Promise<void> {
+    private async createJSFile(jsScript: JSScript, jsFileDir: string): Promise<void> {
         try {
-            this.logger.debug('createJSScriptDir');
-            if (!existsSync(jsScriptDir)) {
-                mkdirSync(jsScriptDir);
-            };
-        } catch (err) {
-            this.logger.error('createJSScriptDir fail');
-            throw err;
-        };
-    };
-
-    private async createJSVersionDir(jsVersionDir: string): Promise<void> {
-        try {
-            this.logger.debug('createJSVersionDir');
-            if (!existsSync(jsVersionDir)) {
-                mkdirSync(jsVersionDir);
-            };
-        } catch (err) {
-            this.logger.error('createJSVersionDir fail');
-            throw err;
-        };
-    };
-
-    private async createJSFile(jsFileDir: string, scriptContent: string): Promise<void> {
-        try {
-            this.logger.debug('createJSFile');
+            const { scriptName, scriptVersion, scriptContent } = jsScript;
+            const jsVersionDir = join(this.jsFileDir, scriptName, scriptVersion.toString());
+            await this.createJSVersionDir(scriptName, jsVersionDir);
             if (!existsSync(jsFileDir)) {
+                this.logger.debug('createJSFile');
                 writeFileSync(jsFileDir, scriptContent);
             };
         } catch (err) {
@@ -83,34 +59,61 @@ export class ChildJSService {
         };
     };
 
-    private async npmInit(jsVersionDir: string) {
+    private async createJSVersionDir(scriptName: string, jsVersionDir: string): Promise<void> {
         try {
-            this.logger.debug('npmInit');
-            const cmd = 'npm init -y';
-            const cwd = jsVersionDir;
-            await this.childService.execChild(cmd, cwd);
+            const jsDir = join(this.jsFileDir, scriptName);
+            await this.createJSDir(jsDir);
+            if (!existsSync(jsVersionDir)) {
+                this.logger.debug('createJSVersionDir');
+                mkdirSync(jsVersionDir);
+            };
         } catch (err) {
-            this.logger.error('npmInit fail');
+            this.logger.error('createJSVersionDir fail');
+            throw err;
+        };
+    };
+
+    private async createJSDir(jsDir: string): Promise<void> {
+        try {
+            if (!existsSync(jsDir)) {
+                this.logger.debug('createJSDir');
+                mkdirSync(jsDir);
+            };
+        } catch (err) {
+            this.logger.error('createJSDir fail');
             this.logger.error(err);
             throw err;
         };
     };
 
-    private async npmInstall(jsVersionDir: string, scriptPackage: object) {
+    private async npmInit(cwd: string): Promise<void> {
+        try {
+            const packageJsonDir = join(cwd, 'package.json');
+            if (!existsSync(packageJsonDir)) {
+                this.logger.debug('npmInit');
+                const cmd = 'npm init -y';
+                await this.childService.execChild(cmd, cwd);
+            };
+        } catch (err) {
+            this.logger.error('npmInit fail');
+            throw err;
+        };
+    };
+
+    private async npmInstall(cwd: string, scriptPackage: object): Promise<void> {
         try {
             this.logger.debug('npmInstall');
             const cmd = 'npm install';
-            const cwd = jsVersionDir;
             const cmdPackages = await this.addPackages(cmd, scriptPackage);
+            this.logger.log(cmdPackages);
             await this.childService.execChild(cmdPackages, cwd);
         } catch (err) {
             this.logger.error('npmInstall fail');
-            this.logger.error(err);
             throw err;
         };
     };
 
-    private async addPackages(cmd: string, scriptPackage: object) {
+    private async addPackages(cmd: string, scriptPackage: object): Promise<string> {
         try {
             this.logger.debug('addPackages');
             cmd += ` minimist`;
@@ -131,14 +134,15 @@ export class ChildJSService {
         };
     };
 
-    private async nodeRun(jsScript: JSScript, jsVersionDir: string, input: object) {
+    private async nodeRun(jsScript: JSScript, jsVersion: number, input: object): Promise<void> {
         try {
             this.logger.debug('nodeRun');
-            const { scriptName, scriptID, scriptVersion } = jsScript;
+            const { scriptName, scriptID } = jsScript;
             const childLogger = new Logger(scriptName);
             const cmd = `node ${scriptName}.js`;
             const cmdArgs = await this.addArgs(cmd, input);
-            const cwd = jsVersionDir;
+            const cwd = join(this.jsFileDir, scriptName, jsVersion.toString());
+            this.logger.debug(cmdArgs);
             const child = await this.childService.execChild(cmdArgs, cwd);
             //execute success and child success
             child.stdout.on('data', data => {
@@ -147,7 +151,7 @@ export class ChildJSService {
                 const childReturn = JSON.stringify(data);
                 const jsExecutionLog: CreateJSExecutionLogDto = {
                     scriptID: scriptID,
-                    scriptVersion: scriptVersion,
+                    scriptVersion: jsVersion,
                     processDatetime: new Date(),
                     precessParam: param,
                     processStatus: 'Success',
@@ -162,7 +166,7 @@ export class ChildJSService {
                 const childReturn = JSON.stringify(error);
                 const jsExecutionLog: CreateJSExecutionLogDto = {
                     scriptID: scriptID,
-                    scriptVersion: scriptVersion,
+                    scriptVersion: jsVersion,
                     processDatetime: new Date(),
                     precessParam: param,
                     processStatus: 'Success',
@@ -177,7 +181,7 @@ export class ChildJSService {
                 const childReturn = JSON.stringify(error);
                 const jsExecutionLog: CreateJSExecutionLogDto = {
                     scriptID: scriptID,
-                    scriptVersion: scriptVersion,
+                    scriptVersion: jsVersion,
                     processDatetime: new Date(),
                     precessParam: param,
                     processStatus: 'Fail',
@@ -187,7 +191,6 @@ export class ChildJSService {
             });
         } catch (err) {
             this.logger.error('nodeRun fail');
-            this.logger.error(err);
             throw err;
         };
     };
@@ -201,6 +204,7 @@ export class ChildJSService {
             return cmd;
         } catch (err) {
             this.logger.error('addArgs fail');
+            this.logger.error(err);
             throw err;
         };
     };

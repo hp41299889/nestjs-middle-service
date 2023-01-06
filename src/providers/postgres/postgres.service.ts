@@ -35,6 +35,7 @@ export class PostgresService implements TypeOrmOptionsFactory {
             };
         } catch (err) {
             this.logger.error('Creating connection for postgres fail');
+            this.logger.error(err);
             throw err;
         };
     };

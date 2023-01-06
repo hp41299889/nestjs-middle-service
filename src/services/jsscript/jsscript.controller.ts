@@ -3,7 +3,8 @@ import { Controller, Logger, Post, Get, Patch, Delete, Body, Res, Session } from
 import { Response } from 'express';
 
 //dtos
-import { CreateOneJSScriptDto, DeleteOneJSScriptByIDDto, ReadOneJSScriptByIDDto, TestDto, UpdateOneJSScriptByIDDto } from './jsScript.dto';
+import { CreateOneJSScriptDto, DeleteOneJSScriptByIDDto, ReadOneJSScriptByIDDto, UpdateOneJSScriptByIDDto } from './jsScript.dto';
+import { ChildJSDto } from 'src/job/childJS/childJS.dto';
 //services
 import { JSScriptService } from './jsScript.service';
 
@@ -147,7 +148,7 @@ export class JSScriptController {
     };
 
     @Post('/test')
-    async test(@Res() res: Response, @Body() dto: TestDto): Promise<void> {
+    async test(@Res() res: Response, @Body() dto: ChildJSDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/test');
             await this.jsScriptService.test(dto);

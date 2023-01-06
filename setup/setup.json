@@ -1,12 +1,12 @@
 {
-  "enableScheduleService": "true",
+  "enableMiddleService": "true",
   "bossQueue": {
     "IP": "192.168.36.51",
     "port": "5672",
     "account": "root",
     "password": "a3345678",
-    "inputQueueName": "boss_queue_input",
-    "outputQueueName": "boss_queue_output"
+    "inputQueueName": "job_queue_output",
+    "outputQueueName": "middle_service_output"
   },
   "jobQueue": {
     "IP": "192.168.36.51",

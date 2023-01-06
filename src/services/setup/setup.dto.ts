@@ -8,7 +8,7 @@ class ConnectionDto extends LoginDto {
     port: string;
 };
 
-class RMQConnectionDto extends ConnectionDto {
+export class RMQConnectionDto extends ConnectionDto {
     inputQueueName: string;
     outputQueueName: string;
 };

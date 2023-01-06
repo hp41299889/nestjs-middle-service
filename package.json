@@ -1,6 +1,6 @@
 {
   "name": "middle-service",
-  "version": "0.5.3",
+  "version": "0.6.1",
   "description": "",
   "author": "Danny",
   "private": true,
@@ -25,6 +25,7 @@
   "dependencies": {
     "@nestjs/common": "^9.0.0",
     "@nestjs/core": "^9.0.0",
+    "@nestjs/microservices": "^9.2.1",
     "@nestjs/mongoose": "^9.2.1",
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/typeorm": "^9.0.1",

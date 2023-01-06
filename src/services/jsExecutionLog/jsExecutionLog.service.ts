@@ -39,7 +39,6 @@ export class JSExecutionLogService {
             };
         } catch (err) {
             this.logger.error('query fail');
-            this.logger.error(err);
             throw err;
         };
     };

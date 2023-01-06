@@ -1,9 +1,6 @@
 //packages
 import { Injectable, Logger } from '@nestjs/common';
-import { execSync, exec } from 'child_process';
-
-//models
-//services
+import { exec } from 'child_process';
 
 @Injectable()
 export class ChildService {

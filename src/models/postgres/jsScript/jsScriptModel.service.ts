@@ -23,6 +23,7 @@ export class JSScriptModelService {
             return await this.jsScriptRepo.save(jsScript);
         } catch (err) {
             this.logger.error('createAJSScript fail');
+            this.logger.error(err);
             throw err;
         };
     };
@@ -33,6 +34,7 @@ export class JSScriptModelService {
             return await this.jsScriptRepo.find();
         } catch (err) {
             this.logger.error('readAllJSScript fail');
+            this.logger.error(err);
             throw err;
         };
     };
@@ -43,6 +45,7 @@ export class JSScriptModelService {
             return await this.jsScriptRepo.findOneBy({ scriptID: scriptID });
         } catch (err) {
             this.logger.error('readOneByID fail');
+            this.logger.error(err);
             throw err;
         };
     };
@@ -55,6 +58,7 @@ export class JSScriptModelService {
             return await this.jsScriptRepo.increment({ scriptID: dto.scriptID }, 'scriptVersion', 1);
         } catch (err) {
             this.logger.error('updateAJSScriptByScriptID fail');
+            this.logger.error(err);
             throw err;
         };
     };
@@ -65,6 +69,7 @@ export class JSScriptModelService {
             return await this.jsScriptRepo.delete(scriptID);
         } catch (err) {
             this.logger.error('deleteAJSScriptByScriptID fail');
+            this.logger.error(err);
             throw err;
         };
     };

@@ -23,6 +23,7 @@ export class MongoService implements MongooseOptionsFactory {
             return { uri };
         } catch (err) {
             this.logger.error('Creating connection for mongo fail');
+            this.logger.error(err);
             throw err;
         };
     };

@@ -18,7 +18,3 @@ export class DeleteOneJSScriptByIDDto extends ReadOneJSScriptByIDDto {
 
 };
 
-export class TestDto {
-    scriptID: number;
-    input: object;
-};

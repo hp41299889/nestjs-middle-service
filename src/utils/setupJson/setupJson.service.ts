@@ -26,7 +26,7 @@ export class SetupJsonService {
 
     async readByKey(key: string): Promise<any> {
         try {
-            this.logger.debug('readByKey');
+            this.logger.debug(`readByKey ${key}`);
             const setupKey = await this.read();
             return setupKey[key];
         } catch (err) {

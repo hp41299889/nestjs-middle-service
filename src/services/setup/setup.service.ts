@@ -21,7 +21,6 @@ export class SetupService {
             return json;
         } catch (err) {
             this.logger.error('read fail');
-            this.logger.error(err);
             throw err;
         };
     };
@@ -43,7 +42,6 @@ export class SetupService {
                     await connection.destroy();
                     return 'postgresConnectTest success';
                 }).catch(err => {
-                    this.logger.error(err);
                     throw err;
                 });
         } catch (err) {
@@ -71,7 +69,6 @@ export class SetupService {
                     await connection.destroy();
                     return 'mongoConnectTest success';
                 }).catch(err => {
-                    this.logger.error(err);
                     throw err;
                 });
         } catch (err) {
@@ -88,7 +85,6 @@ export class SetupService {
             await this.restart();
         } catch (err) {
             this.logger.error('save fail');
-            this.logger.error(err);
             throw err;
         };
     };

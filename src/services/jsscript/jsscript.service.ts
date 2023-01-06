@@ -6,7 +6,8 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { JSScript } from 'src/models/postgres/jsScript/jsScriptModel.entity';
 import { JSScriptModelService } from 'src/models/postgres/jsScript/jsScriptModel.service';
 //dtos
-import { CreateOneJSScriptDto, ReadOneJSScriptByIDDto, UpdateOneJSScriptByIDDto, DeleteOneJSScriptByIDDto, TestDto } from './jsScript.dto';
+import { CreateOneJSScriptDto, ReadOneJSScriptByIDDto, UpdateOneJSScriptByIDDto, DeleteOneJSScriptByIDDto } from './jsScript.dto';
+import { ChildJSDto } from 'src/job/childJS/childJS.dto';
 //services
 import { ChildJSService } from 'src/job/childJS/childJS.service';
 
@@ -32,7 +33,6 @@ export class JSScriptService {
             return result;
         } catch (err) {
             this.logger.error('createOne fail');
-            this.logger.error(err);
             throw err;
         };
     };
@@ -44,7 +44,6 @@ export class JSScriptService {
             return result;
         } catch (err) {
             this.logger.error('readAll, fail');
-            this.logger.error(err);
             throw err;
         };
     };
@@ -56,7 +55,6 @@ export class JSScriptService {
             return result;
         } catch (err) {
             this.logger.error('readOneByID fail');
-            this.logger.error(err);
             throw err;
         };
     };
@@ -71,7 +69,6 @@ export class JSScriptService {
             return result;
         } catch (err) {
             this.logger.error('updateOneByID fail');
-            this.logger.error(err);
             throw err;
         };
     };
@@ -83,19 +80,17 @@ export class JSScriptService {
             return result;
         } catch (err) {
             this.logger.error('DeleteOneByID fail');
-            this.logger.error(err);
             throw err;
         };
     };
 
-    async test(dto: TestDto): Promise<void> {
+    async test(dto: ChildJSDto): Promise<void> {
         try {
             this.logger.debug('test');
-            const result = await this.childJSService.test(dto);
+            const result = await this.childJSService.execChildJS(dto);
             return result;
         } catch (err) {
             this.logger.error('test fail');
-            this.logger.error(err);
             throw err;
         };
     };

@@ -18,34 +18,34 @@ export class JSExecutionLogModelService {
 
     private readonly logger = new Logger(JSExecutionLogModelService.name);
 
-    async createOne(createJSExecutionLogDto: CreateJSExecutionLogDto) {
+    async createOne(createJSExecutionLogDto: CreateJSExecutionLogDto): Promise<any> {
         try {
             this.logger.debug('create one');
             const created = new this.jsExecutionLogModel(createJSExecutionLogDto);
             return await created.save();
         } catch (err) {
+            this.logger.error('create one fail');
             this.logger.error(err);
             throw err;
         };
     };
 
-    async findAll() {
+    async findAll(): Promise<any> {
         try {
             this.logger.debug('findAll');
             const docs = await this.jsExecutionLogModel.find().exec();
             this.logger.debug(docs);
             return docs;
         } catch (err) {
+            this.logger.error('findAll fail');
             this.logger.error(err);
             throw err;
         };
     };
 
-    async findTimePeriod(startTime: number, endTime: number) {
+    async findTimePeriod(startTime: number, endTime: number): Promise<any> {
         try {
             this.logger.debug('findTimePeriod');
-            this.logger.debug(new Date(startTime));
-            this.logger.debug(new Date(endTime));
             const docs = await this.jsExecutionLogModel
                 .find()
                 .where('processDatetime').gt(startTime).lt(endTime)
