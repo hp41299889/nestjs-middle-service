@@ -2,7 +2,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { join } from 'path';
 import { writeFileSync, existsSync, mkdirSync } from 'fs';
-import { exec } from 'child_process';
 
 //models
 import { JSScript } from 'src/models/postgres/jsScript/jsScriptModel.entity';
@@ -30,9 +29,9 @@ export class ChildJSService {
     async test(dto: TestDto): Promise<void> {
         try {
             this.logger.debug('test');
-            const { scriptID, data } = dto;
+            const { scriptID, input } = dto;
             const jsScript = await this.jsScriptModel.readOneByID(scriptID);
-            const { scriptName, scriptVersion, scriptContent } = jsScript;
+            const { scriptName, scriptVersion, scriptContent, scriptPackage } = jsScript;
             const jsScriptDir = join(this.jsFileDir, scriptName);
             const jsVersionDir = join(jsScriptDir, scriptVersion.toString());
             const jsFileDir = join(jsVersionDir, `${scriptName}.js`);
@@ -40,8 +39,8 @@ export class ChildJSService {
             await this.createJSVersionDir(jsVersionDir);
             await this.createJSFile(jsFileDir, scriptContent);
             await this.npmInit(jsVersionDir);
-            await this.npmInstall(jsVersionDir, data['packages']);
-            await this.nodeRun(scriptName, jsVersionDir, data);
+            await this.npmInstall(jsVersionDir, scriptPackage);
+            await this.nodeRun(jsScript, jsVersionDir, input);
         } catch (err) {
             this.logger.error('test fail');
             throw err;
@@ -97,13 +96,12 @@ export class ChildJSService {
         };
     };
 
-    private async npmInstall(jsVersionDir: string, packages: string[]) {
+    private async npmInstall(jsVersionDir: string, scriptPackage: object) {
         try {
             this.logger.debug('npmInstall');
-            this.logger.debug(packages);
             const cmd = 'npm install';
             const cwd = jsVersionDir;
-            const cmdPackages = await this.addPackages(cmd, packages);
+            const cmdPackages = await this.addPackages(cmd, scriptPackage);
             await this.childService.execChild(cmdPackages, cwd);
         } catch (err) {
             this.logger.error('npmInstall fail');
@@ -112,12 +110,18 @@ export class ChildJSService {
         };
     };
 
-    private async addPackages(cmd: string, packages: string[]) {
+    private async addPackages(cmd: string, scriptPackage: object) {
         try {
             this.logger.debug('addPackages');
             cmd += ` minimist`;
-            packages.forEach(pkg => {
-                cmd += ` ${pkg}`;
+            Object.keys(scriptPackage).forEach(key => {
+                if (scriptPackage[key].charAt(0) == '^') {
+                    const packageVersion = scriptPackage[key].slice(1);
+                    cmd += ` ${key}@${packageVersion}`;
+                } else {
+                    const packageVersion = scriptPackage[key];
+                    cmd += ` ${key}@${packageVersion}`;
+                };
             });
             return cmd;
         } catch (err) {
@@ -127,13 +131,60 @@ export class ChildJSService {
         };
     };
 
-    private async nodeRun(scriptName: string, jsVersionDir: string, data: object) {
+    private async nodeRun(jsScript: JSScript, jsVersionDir: string, input: object) {
         try {
             this.logger.debug('nodeRun');
+            const { scriptName, scriptID, scriptVersion } = jsScript;
+            const childLogger = new Logger(scriptName);
             const cmd = `node ${scriptName}.js`;
-            const cmdArgs = await this.addArgs(cmd, data['input']);
+            const cmdArgs = await this.addArgs(cmd, input);
             const cwd = jsVersionDir;
-            await this.childService.execChild(cmdArgs, cwd);
+            const child = await this.childService.execChild(cmdArgs, cwd);
+            //execute success and child success
+            child.stdout.on('data', data => {
+                childLogger.debug(data);
+                const param = JSON.stringify(input);
+                const childReturn = JSON.stringify(data);
+                const jsExecutionLog: CreateJSExecutionLogDto = {
+                    scriptID: scriptID,
+                    scriptVersion: scriptVersion,
+                    processDatetime: new Date(),
+                    precessParam: param,
+                    processStatus: 'Success',
+                    processReturn: childReturn
+                };
+                this.jsExecutionLogModel.createOne(jsExecutionLog);
+            });
+            //execute success but child fail
+            child.stdout.on('error', error => {
+                childLogger.error(error);
+                const param = JSON.stringify(input);
+                const childReturn = JSON.stringify(error);
+                const jsExecutionLog: CreateJSExecutionLogDto = {
+                    scriptID: scriptID,
+                    scriptVersion: scriptVersion,
+                    processDatetime: new Date(),
+                    precessParam: param,
+                    processStatus: 'Success',
+                    processReturn: childReturn
+                };
+                this.jsExecutionLogModel.createOne(jsExecutionLog);
+            });
+            //execute fail
+            child.stderr.on('error', error => {
+                childLogger.error(error);
+                const param = JSON.stringify(input);
+                const childReturn = JSON.stringify(error);
+                const jsExecutionLog: CreateJSExecutionLogDto = {
+                    scriptID: scriptID,
+                    scriptVersion: scriptVersion,
+                    processDatetime: new Date(),
+                    precessParam: param,
+                    processStatus: 'Fail',
+                    processReturn: childReturn
+                };
+                this.jsExecutionLogModel.createOne(jsExecutionLog);
+            });
         } catch (err) {
             this.logger.error('nodeRun fail');
             this.logger.error(err);

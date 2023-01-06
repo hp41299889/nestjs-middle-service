@@ -1,6 +1,7 @@
 export class CreateOneJSScriptDto {
     scriptName: string;
     scriptContent: string;
+    scriptPackage?: object;
 };
 
 export class UpdateOneJSScriptByIDDto {
@@ -19,5 +20,5 @@ export class DeleteOneJSScriptByIDDto extends ReadOneJSScriptByIDDto {
 
 export class TestDto {
     scriptID: number;
-    data: object;
+    input: object;
 };

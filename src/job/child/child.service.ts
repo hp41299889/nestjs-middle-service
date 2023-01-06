@@ -1,6 +1,6 @@
 //packages
 import { Injectable, Logger } from '@nestjs/common';
-import { execSync } from 'child_process';
+import { execSync, exec } from 'child_process';
 
 //models
 //services
@@ -11,7 +11,8 @@ export class ChildService {
 
     async execChild(cmd: string, cwd: string) {
         try {
-            execSync(cmd, { encoding: 'binary', cwd: cwd });
+            const child = exec(cmd, { encoding: 'binary', cwd: cwd });
+            return child;
         } catch (err) {
             this.logger.error('execChild fail');
             this.logger.error(err);

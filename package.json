@@ -1,6 +1,6 @@
 {
   "name": "middle-service",
-  "version": "0.5.2",
+  "version": "0.5.3",
   "description": "",
   "author": "Danny",
   "private": true,
@@ -30,6 +30,7 @@
     "@nestjs/typeorm": "^9.0.1",
     "amqp-connection-manager": "^4.1.10",
     "amqplib": "^0.10.3",
+    "axios": "^1.2.2",
     "express-session": "^1.17.3",
     "minimist": "^1.2.7",
     "nodemon": "^2.0.20",

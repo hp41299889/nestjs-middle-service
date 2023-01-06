@@ -1,5 +1,5 @@
 //packages
-import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn, Generated } from 'typeorm';
+import { Entity, Column, PrimaryGeneratedColumn, CreateDateColumn, UpdateDateColumn } from 'typeorm';
 
 @Entity()
 export class JSScript {
@@ -23,4 +23,7 @@ export class JSScript {
 
     @Column()
     scriptContent: string;
+
+    @Column('json')
+    scriptPackage: object;
 };

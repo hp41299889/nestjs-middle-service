@@ -25,6 +25,7 @@ export class JSScriptService {
             const jsScript = new JSScript();
             jsScript.scriptName = dto.scriptName;
             jsScript.scriptContent = dto.scriptContent;
+            jsScript.scriptPackage = dto.scriptPackage;
             jsScript.scriptSource = 'api';
             jsScript.scriptVersion = 1;
             const result = await this.jsScriptModel.createOne(jsScript);
