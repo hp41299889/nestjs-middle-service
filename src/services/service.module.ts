@@ -12,7 +12,7 @@ import { AuthModule } from "./auth/auth.module";
         JSScriptModule,
         SetupModule,
         JSExecutionLogModule,
-        AuthModule
-    ]
+        AuthModule,
+    ],
 })
 export class ServiceModule { };

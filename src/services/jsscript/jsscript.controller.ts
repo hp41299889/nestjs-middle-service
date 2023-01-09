@@ -2,6 +2,8 @@
 import { Controller, Logger, Post, Get, Patch, Delete, Body, Res, Session } from '@nestjs/common';
 import { Response } from 'express';
 
+//configs
+import jsScriptConfig from './jsScript.config';
 //dtos
 import { CreateOneJSScriptDto, DeleteOneJSScriptByIDDto, ReadOneJSScriptByIDDto, UpdateOneJSScriptByIDDto } from './jsScript.dto';
 import { ChildJSDto } from 'src/job/childJS/childJS.dto';
@@ -9,7 +11,18 @@ import { ChildJSDto } from 'src/job/childJS/childJS.dto';
 import { JSScriptService } from './jsScript.service';
 import { HttpResponseService } from 'src/utils/httpResponse/httpResponse.service';
 
-@Controller('JSScript')
+const {
+    prefix,
+    viewRoute,
+    createRoute,
+    readAllRoute,
+    queryRoute,
+    updateRoute,
+    deleteRoute,
+    testRoute
+} = jsScriptConfig;
+
+@Controller(prefix)
 export class JSScriptController {
     constructor(
         private readonly httpResponseService: HttpResponseService,
@@ -19,7 +32,7 @@ export class JSScriptController {
     private readonly logger = new Logger(JSScriptController.name);
 
     //TODO render view
-    @Get('view')
+    @Get(viewRoute)
     async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/JSScript/view');
@@ -35,7 +48,7 @@ export class JSScriptController {
         };
     };
 
-    @Post('create')
+    @Post(createRoute)
     async createOne(@Res() res: Response, @Body() dto: CreateOneJSScriptDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/create');
@@ -48,7 +61,7 @@ export class JSScriptController {
         };
     };
 
-    @Get('readAll')
+    @Get(readAllRoute)
     async readAll(@Res() res: Response): Promise<void> {
         try {
             this.logger.debug('/JSScript/readAll ');
@@ -61,7 +74,7 @@ export class JSScriptController {
         };
     };
 
-    @Get('query')
+    @Get(queryRoute)
     async readOneByID(@Res() res: Response, @Body() dto: ReadOneJSScriptByIDDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/readOneByID');
@@ -74,7 +87,7 @@ export class JSScriptController {
         };
     };
 
-    @Patch('update')
+    @Patch(updateRoute)
     async updateOneByID(@Res() res: Response, @Body() dto: UpdateOneJSScriptByIDDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/update');
@@ -87,7 +100,7 @@ export class JSScriptController {
         };
     };
 
-    @Delete('delete')
+    @Delete(deleteRoute)
     async deleteOneByID(@Res() res: Response, @Body() dto: DeleteOneJSScriptByIDDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/delete');
@@ -100,7 +113,7 @@ export class JSScriptController {
         };
     };
 
-    @Post('test')
+    @Post(testRoute)
     async test(@Res() res: Response, @Body() dto: ChildJSDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/test');

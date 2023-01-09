@@ -1,3 +1,15 @@
+//dtos
+import { ControllerBasicDto } from "src/basics/dtos/config.dto";
+
+export class JSScriptControllerConfigDto extends ControllerBasicDto {
+    createRoute: string;
+    readAllRoute: string;
+    queryRoute: string;
+    updateRoute: string;
+    deleteRoute: string;
+    testRoute: string;
+};
+
 export class CreateOneJSScriptDto {
     scriptName: string;
     scriptContent: string;
@@ -17,4 +29,3 @@ export class ReadOneJSScriptByIDDto {
 export class DeleteOneJSScriptByIDDto extends ReadOneJSScriptByIDDto {
 
 };
-

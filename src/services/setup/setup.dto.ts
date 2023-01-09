@@ -1,3 +1,13 @@
+//dtos
+import { ControllerBasicDto } from "src/basics/dtos/config.dto";
+
+export class SetupControllerConfigDto extends ControllerBasicDto {
+    readRoute: string;
+    postgresConnectTestRoute: string;
+    mongoConnectTestRoute: string;
+    saveRoute: string;
+};
+
 export class LoginDto {
     account: string;
     password: string;

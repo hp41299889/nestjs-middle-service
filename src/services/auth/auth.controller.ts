@@ -2,13 +2,22 @@
 import { Controller, Logger, Post, Get, Req, Res, Body, Session } from '@nestjs/common';
 import { Request, Response } from 'express';
 
+//configs
+import authConfig from './auth.config';
 //dtos
 import { LoginDto } from '../setup/setup.dto';
 //services
 import { AuthService } from './auth.service';
 import { HttpResponseService } from 'src/utils/httpResponse/httpResponse.service';
 
-@Controller('Auth')
+const {
+    prefix,
+    viewRoute,
+    loginRoute,
+    logoutRoute
+} = authConfig;
+
+@Controller(prefix)
 export class AuthController {
     constructor(
         private readonly httpResponseService: HttpResponseService,
@@ -18,7 +27,7 @@ export class AuthController {
     private readonly logger = new Logger(AuthController.name);
 
     //TODO render view
-    @Get('view')
+    @Get(viewRoute)
     async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/Auth/view');
@@ -34,9 +43,10 @@ export class AuthController {
         };
     };
 
-    @Post('login')
+    @Post(loginRoute)
     async login(@Res() res: Response, @Body() dto: LoginDto, @Session() session: Record<string, any>): Promise<void> {
         try {
+            // this.logger.debug(this.config);
             this.logger.debug('/Auth/login');
             if (!session.token) {
                 const result = await this.authService.login(dto);
@@ -52,7 +62,7 @@ export class AuthController {
         };
     };
 
-    @Get('logout')
+    @Get(logoutRoute)
     async logout(@Req() req: Request, @Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/Auth/login');

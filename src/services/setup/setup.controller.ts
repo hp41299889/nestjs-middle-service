@@ -2,13 +2,24 @@
 import { Controller, Logger, Get, Res, Post, Body, Session, Patch } from '@nestjs/common';
 import { Response } from 'express';
 
+//configs
+import setupConfig from './setup.config';
 //dtos
 import { DBConnectionDto, SetupSaveDto } from './setup.dto';
 //services
 import { SetupService } from './setup.service';
 import { HttpResponseService } from 'src/utils/httpResponse/httpResponse.service';
 
-@Controller('Setup')
+const {
+    prefix,
+    viewRoute,
+    readRoute,
+    postgresConnectTestRoute,
+    mongoConnectTestRoute,
+    saveRoute
+} = setupConfig;
+
+@Controller(prefix)
 export class SetupController {
     constructor(
         private readonly httpResponseService: HttpResponseService,
@@ -18,7 +29,7 @@ export class SetupController {
     private readonly logger = new Logger(SetupController.name);
 
     //TODO render view
-    @Get('view')
+    @Get(viewRoute)
     async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/Setup/view');
@@ -34,7 +45,7 @@ export class SetupController {
         };
     };
 
-    @Get('read')
+    @Get(readRoute)
     async read(@Res() res: Response): Promise<void> {
         try {
             this.logger.debug('/Setup/read');
@@ -47,7 +58,7 @@ export class SetupController {
         };
     };
 
-    @Post('postgresConnectTest')
+    @Post(postgresConnectTestRoute)
     async postgresConnectTest(@Res() res: Response, @Body() dto: DBConnectionDto): Promise<void> {
         try {
             this.logger.debug('/Setup/postgresConnectTest');
@@ -60,7 +71,7 @@ export class SetupController {
         };
     };
 
-    @Post('mongoConnectTest')
+    @Post(mongoConnectTestRoute)
     async mongoConnectTest(@Res() res: Response, @Body() dto: DBConnectionDto): Promise<void> {
         try {
             this.logger.debug('/Setup/mongoConnectTest');
@@ -73,7 +84,7 @@ export class SetupController {
         };
     };
 
-    @Patch('save')
+    @Patch(saveRoute)
     async save(@Res() res: Response, @Body() dto: SetupSaveDto): Promise<void> {
         try {
             this.logger.debug('/Setup/save');
