@@ -20,6 +20,7 @@ export class UpdateOneJSScriptByIDDto {
     scriptID: number;
     scriptName?: string;
     scriptContent?: string;
+    scriptPackage?: object;
 };
 
 export class ReadOneJSScriptByIDDto {

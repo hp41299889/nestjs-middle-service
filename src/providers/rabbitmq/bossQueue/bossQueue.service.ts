@@ -25,6 +25,7 @@ export class BossQueueService {
             this.logger.debug('handleMessage');
             const { jsonrpc, method, params } = message;
             await this.checkMessageFormat(message);
+            this.logger.warn(message);
             const methodSplit = await this.splitMethod(method);
             const scriptID = +methodSplit[2];
             const scriptVersion = +methodSplit[3];

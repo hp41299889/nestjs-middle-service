@@ -34,7 +34,7 @@ export class SetupController {
         try {
             this.logger.debug('/Setup/view');
             if (!session.token) {
-                await this.httpResponseService.redirectView(res, 200, '/MiddleService/Auth/view');
+                await this.httpResponseService.renderView(res, 200, 'auth');
             } else {
                 await this.httpResponseService.renderView(res, 200, 'setup');
             };

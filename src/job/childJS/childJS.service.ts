@@ -49,6 +49,8 @@ export class ChildJSService {
             const { scriptName, scriptVersion, scriptContent } = jsScript;
             const jsVersionDir = join(this.jsFileDir, scriptName, scriptVersion.toString());
             await this.createJSVersionDir(scriptName, jsVersionDir);
+            this.logger.warn(jsFileDir);
+            this.logger.warn(scriptContent);
             if (!existsSync(jsFileDir)) {
                 this.logger.debug('createJSFile');
                 writeFileSync(jsFileDir, scriptContent);
@@ -76,6 +78,7 @@ export class ChildJSService {
     private async createJSDir(jsDir: string): Promise<void> {
         try {
             if (!existsSync(jsDir)) {
+                this.logger.warn(jsDir);
                 this.logger.debug('createJSDir');
                 mkdirSync(jsDir);
             };

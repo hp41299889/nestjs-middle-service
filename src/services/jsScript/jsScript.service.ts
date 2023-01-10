@@ -65,6 +65,7 @@ export class JSScriptService {
             const jsScript = new JSScript();
             jsScript.scriptName = dto.scriptName;
             jsScript.scriptContent = dto.scriptContent;
+            jsScript.scriptPackage = dto.scriptPackage;
             const result = await this.jsScriptModel.updateOneByScriptID(dto);
             return result;
         } catch (err) {

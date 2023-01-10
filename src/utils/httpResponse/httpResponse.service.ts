@@ -35,7 +35,7 @@ export class HttpResponseService {
 
     async renderView(res: Response, statusCode: number, view: string): Promise<void> {
         try {
-            if (view == 'login') {
+            if (view == 'auth') {
                 return res.status(statusCode).render(view, { layout: this.indexLayout, navbar: false });
             } else {
                 return res.status(statusCode).render(view, { layout: this.indexLayout, navbar: true });
@@ -53,14 +53,6 @@ export class HttpResponseService {
                     url: url
                 }
             });
-        } catch (err) {
-            throw err;
-        };
-    };
-
-    async redirectView(res: Response, statusCode: number, view: string): Promise<void> {
-        try {
-            res.status(statusCode).redirect(`/MiddleService/${view}/view`);
         } catch (err) {
             throw err;
         };

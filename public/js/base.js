@@ -7,16 +7,14 @@ $(document).ready(function () {
 function logout() {
   $('#logoutBtn').click(function (e) {
     e.preventDefault();
-    console.log('e =', e);
-
     $.ajax({
       url: `${authApiUrl}/logout`,
       type: 'GET',
       dataType: 'json',
       success: async res => {
         const { status, result } = res;
-        if (status != 'success') {
-          throw 'status is not success';
+        if (status != 'redirect') {
+          throw 'status is not redirect';
         } else {
           const { url } = result;
           location.replace(url);
@@ -25,19 +23,6 @@ function logout() {
       error: async err => {
         console.log(err);
       }
-
     });
-    //   fetch(`${authApiUrl}/logout`, {
-    //     headers: {
-    //       "Content-Type": "application/json"
-    //     },
-    //     method: 'GET',
-    //     redirect: "follow"
-    //   })
-    //     .then(res => res.redirected && (location.href = res.url))
-    //     .catch(err => {
-    //       console.log('err =', err)
-    //     })
-    //   sessionStorage.clear();
   });
 };

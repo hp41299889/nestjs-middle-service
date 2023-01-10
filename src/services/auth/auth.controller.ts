@@ -34,9 +34,9 @@ export class AuthController {
         try {
             this.logger.debug('/Auth/view');
             if (!session.token) {
-                await this.httpResponseService.renderView(res, 200, 'login');
+                await this.httpResponseService.renderView(res, 200, 'auth');
             } else {
-                await this.httpResponseService.redirectView(res, 200, 'jsScript');
+                await this.httpResponseService.renderView(res, 200, 'jsScript');
             };
         } catch (err) {
             this.logger.error('/Auth/view fail');

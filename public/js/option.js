@@ -1,14 +1,3 @@
-const scheduleTypeOptions = [
-  {
-    value: 'regular',
-    label: '定期排程',
-  },
-  {
-    value: 'cycle',
-    label: '週期排程',
-  },
-];
-
 const regularWeekOptions = [
   {
     value: '',
