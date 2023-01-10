@@ -154,9 +154,10 @@ export class ChildJSService {
                 const childReturn = JSON.stringify(data);
                 const jsExecutionLog: CreateJSExecutionLogDto = {
                     scriptID: scriptID,
+                    scriptName: scriptName,
                     scriptVersion: jsVersion,
                     processDatetime: new Date(),
-                    precessParam: param,
+                    processParam: param,
                     processStatus: 'Success',
                     processReturn: childReturn
                 };
@@ -169,9 +170,10 @@ export class ChildJSService {
                 const childReturn = JSON.stringify(error);
                 const jsExecutionLog: CreateJSExecutionLogDto = {
                     scriptID: scriptID,
+                    scriptName: scriptName,
                     scriptVersion: jsVersion,
                     processDatetime: new Date(),
-                    precessParam: param,
+                    processParam: param,
                     processStatus: 'Success',
                     processReturn: childReturn
                 };
@@ -184,9 +186,10 @@ export class ChildJSService {
                 const childReturn = JSON.stringify(error);
                 const jsExecutionLog: CreateJSExecutionLogDto = {
                     scriptID: scriptID,
+                    scriptName: scriptName,
                     scriptVersion: jsVersion,
                     processDatetime: new Date(),
-                    precessParam: param,
+                    processParam: param,
                     processStatus: 'Fail',
                     processReturn: childReturn
                 };

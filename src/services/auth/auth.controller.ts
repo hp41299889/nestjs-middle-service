@@ -28,16 +28,11 @@ export class AuthController {
     private readonly loginRedirectUrl = '/MiddleService/JSScript/view';
     private readonly logoutRedirectUrl = '/MiddleService/Auth/view';
 
-    //TODO render view
     @Get(viewRoute)
     async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/Auth/view');
-            if (!session.token) {
-                await this.httpResponseService.renderView(res, 200, 'auth');
-            } else {
-                await this.httpResponseService.renderView(res, 200, 'jsScript');
-            };
+            await this.httpResponseService.renderView(res, session, 'auth');
         } catch (err) {
             this.logger.error('/Auth/view fail');
             this.httpResponseService.fail(res, 400, err);
@@ -48,7 +43,6 @@ export class AuthController {
     @Post(loginRoute)
     async login(@Res() res: Response, @Body() dto: LoginDto, @Session() session: Record<string, any>): Promise<void> {
         try {
-            // this.logger.debug(this.config);
             this.logger.debug('/Auth/login');
             if (!session.token) {
                 await this.authService.login(dto);

@@ -30,11 +30,7 @@ export class JSExecutionLogController {
     async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/JSExecutionLog/view');
-            if (!session.token) {
-                await this.httpResponseService.renderView(res, 200, 'auth');
-            } else {
-                await this.httpResponseService.renderView(res, 200, 'jsExecutionLog');
-            };
+            await this.httpResponseService.renderView(res, session, 'jsExecutionLog');
         } catch (err) {
             this.logger.error('/JSExecutionLog/view fail');
             this.httpResponseService.fail(res, 400, err);

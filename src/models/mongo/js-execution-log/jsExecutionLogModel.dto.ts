@@ -1,8 +1,9 @@
 export class CreateJSExecutionLogDto {
     scriptID: number;
+    scriptName: string;
     scriptVersion: number;
     processDatetime: Date;
-    precessParam: string;
+    processParam: string;
     processStatus: string;
     processReturn: string;
 };

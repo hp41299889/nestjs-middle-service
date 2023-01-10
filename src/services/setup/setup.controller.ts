@@ -1,6 +1,6 @@
 //packages
-import { Controller, Logger, Get, Res, Post, Body, Session, Patch } from '@nestjs/common';
-import { Response } from 'express';
+import { Controller, Logger, Get, Res, Post, Body, Session, Patch, Req } from '@nestjs/common';
+import { Request, Response } from 'express';
 
 //configs
 import setupConfig from './setup.config';
@@ -19,6 +19,7 @@ const {
     saveRoute
 } = setupConfig;
 
+
 @Controller(prefix)
 export class SetupController {
     constructor(
@@ -33,11 +34,7 @@ export class SetupController {
     async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/Setup/view');
-            if (!session.token) {
-                await this.httpResponseService.renderView(res, 200, 'auth');
-            } else {
-                await this.httpResponseService.renderView(res, 200, 'setup');
-            };
+            await this.httpResponseService.renderView(res, session, 'setup');
         } catch (err) {
             this.logger.error('/Setup/view fail');
             this.httpResponseService.fail(res, 400, err);
@@ -85,11 +82,13 @@ export class SetupController {
     };
 
     @Patch(saveRoute)
-    async save(@Res() res: Response, @Body() dto: SetupSaveDto): Promise<void> {
+    async save(@Req() req: Request, @Res() res: Response, @Body() dto: SetupSaveDto): Promise<void> {
         try {
             this.logger.debug('/Setup/save');
-            const result = await this.setupService.save(dto);
-            this.httpResponseService.success(res, 200, result);
+            await this.setupService.save(dto);
+            req.session.destroy(() => {
+                res.redirect('/MiddleService/Auth/view');
+            });
         } catch (err) {
             this.logger.error('/Setup/save fail');
             this.httpResponseService.fail(res, 400, err);

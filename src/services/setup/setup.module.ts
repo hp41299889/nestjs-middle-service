@@ -10,7 +10,10 @@ import { SetupController } from './setup.controller';
 import { SetupService } from './setup.service';
 
 @Module({
-  imports: [HttpResponseModule, SetupJsonModule],
+  imports: [
+    HttpResponseModule,
+    SetupJsonModule
+  ],
   providers: [SetupService],
   controllers: [SetupController]
 })

@@ -35,19 +35,19 @@ const regularWeekOptions = [
 
 const dateRangeOptions = [
   {
-    value: 'dayBefore',
+    value: 'day',
     label: '前一日',
   },
   {
-    value: 'weekBefore',
+    value: 'week',
     label: '前一週',
   },
   {
-    value: 'monthBefore',
+    value: 'month',
     label: '前一月',
   },
   {
-    value: 'yearBefore',
+    value: 'year',
     label: '前一年',
   },
 ];

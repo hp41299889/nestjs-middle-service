@@ -78,11 +78,11 @@ export class SetupService {
         };
     };
 
-    async save(dto: SetupSaveDto): Promise<void> {
+    async save(dto: SetupSaveDto): Promise<string> {
         try {
             this.logger.debug('save');
             await this.setupJsonService.save(dto);
-            await this.restart();
+            return 'save setup.json success';
         } catch (err) {
             this.logger.error('save fail');
             throw err;

@@ -1,10 +1,11 @@
 //packages
 import { Injectable } from "@nestjs/common";
-import { Response } from "express";
+import { Request, Response } from "express";
 import { join } from "path";
 
 @Injectable()
 export class HttpResponseService {
+
     private readonly indexLayout = join('..', 'layouts', 'index.hbs');
 
     async success(res: Response, statusCode: number, data: any): Promise<void> {
@@ -33,12 +34,21 @@ export class HttpResponseService {
         };
     };
 
-    async renderView(res: Response, statusCode: number, view: string): Promise<void> {
+    async renderView(res: Response, session: Record<string, any>, view: string): Promise<void> {
         try {
-            if (view == 'auth') {
-                return res.status(statusCode).render(view, { layout: this.indexLayout, navbar: false });
+            const sessionAuth = await this.checkSession(session);
+            if (sessionAuth) {
+                if (view == 'auth') {
+                    res.status(200).redirect('/MiddleService/JSScript/view');
+                } else {
+                    res.status(200).render(view, { layout: this.indexLayout, navbar: true });
+                };
             } else {
-                return res.status(statusCode).render(view, { layout: this.indexLayout, navbar: true });
+                if (view == 'auth') {
+                    res.status(200).render('auth', { layout: this.indexLayout, navbar: false });
+                } else {
+                    res.status(200).redirect('/MiddleService/Auth/view');
+                };
             };
         } catch (err) {
             throw err;
@@ -53,6 +63,18 @@ export class HttpResponseService {
                     url: url
                 }
             });
+        } catch (err) {
+            throw err;
+        };
+    };
+
+    private async checkSession(session: Record<string, any>) {
+        try {
+            if (!session.token) {
+                return false;
+            } else {
+                return true;
+            };
         } catch (err) {
             throw err;
         };

@@ -31,16 +31,11 @@ export class JSScriptController {
 
     private readonly logger = new Logger(JSScriptController.name);
 
-    //TODO render view
     @Get(viewRoute)
     async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/JSScript/view');
-            if (!session.token) {
-                await this.httpResponseService.renderView(res, 200, 'auth');
-            } else {
-                await this.httpResponseService.renderView(res, 200, 'jsScript');
-            };
+            await this.httpResponseService.renderView(res, session, 'jsScript');
         } catch (err) {
             this.logger.error('/JSScript/view fail');
             this.httpResponseService.fail(res, 400, err);

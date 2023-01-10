@@ -51,6 +51,19 @@ export class TimeHelperService {
         };
     };
 
+    async getMonthAgoTime(now: Date): Promise<number> {
+        try {
+            this.logger.debug('getWeekAgoTime');
+            const nowTime = new Date(now).getTime();
+            const weekAgoTime = nowTime - 86400000 * 30;
+            return weekAgoTime;
+        } catch (err) {
+            this.logger.error('getWeekAgoTime fail');
+            this.logger.error(err);
+            throw err;
+        };
+    };
+
     async getYearAgoTime(now: Date): Promise<number> {
         try {
             this.logger.debug('getYearAgoTime');

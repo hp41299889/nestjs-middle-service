@@ -24,15 +24,19 @@ export class JSExecutionLogService {
             const now = await this.timeHelperService.dateStringToNowTimeString(startDate);
             const endTime = now.getTime();
             switch (dateInterval) {
-                case '前一日': {
+                case 'day': {
                     const startTime = await this.timeHelperService.getDayAgoTime(now);
                     return await this.jsScriptModel.findTimePeriod(startTime, endTime);
                 };
-                case '前一月': {
+                case 'week': {
                     const startTime = await this.timeHelperService.getWeekAgoTime(now);
                     return await this.jsScriptModel.findTimePeriod(startTime, endTime);
                 };
-                case '前一年': {
+                case 'month': {
+                    const startTime = await this.timeHelperService.getMonthAgoTime(now);
+                    return await this.jsScriptModel.findTimePeriod(startTime, endTime);
+                };
+                case 'year': {
                     const startTime = await this.timeHelperService.getYearAgoTime(now);
                     return await this.jsScriptModel.findTimePeriod(startTime, endTime);
                 };

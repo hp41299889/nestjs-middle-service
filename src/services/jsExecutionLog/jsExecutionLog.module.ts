@@ -12,7 +12,11 @@ import { JSExecutionLogController } from './jsExecutionLog.controller';
 import { JSExecutionLogService } from './jsExecutionLog.service';
 
 @Module({
-    imports: [HttpResponseModule, JSExecutionLogModelModule, TimeHelperModule],
+    imports: [
+        HttpResponseModule,
+        JSExecutionLogModelModule,
+        TimeHelperModule
+    ],
     controllers: [JSExecutionLogController],
     providers: [JSExecutionLogService]
 })

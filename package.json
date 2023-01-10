@@ -1,6 +1,6 @@
 {
   "name": "middle-service",
-  "version": "0.8.1",
+  "version": "0.8.2",
   "description": "",
   "author": "Danny",
   "private": true,
@@ -14,7 +14,9 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "start:nodemon": "nodemon dist/main",
-    "dev": "nest build && npm run start:nodemon",
+    "build:docker": "nest build && docker build -t middle-service .",
+    "docker:tag": "docker tag middle-service lightningpg01/ba220802:middle-service",
+    "docker:push": "npm run build:docker && npm run docker:tag && docker push lightningpg01/ba220802:middle-service",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",

@@ -17,8 +17,8 @@
     "outputQueueName": "job_queue_output"
   },
   "admin": {
-    "account": "admin",
-    "password": "admin"
+    "account": "a",
+    "password": "as"
   },
   "postgreSQL": {
     "IP": "192.168.36.51",

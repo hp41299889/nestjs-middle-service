@@ -2,15 +2,10 @@ const apiUrl = '/MiddleService/JSExecutionLog';
 let table;
 
 $(document).ready(function () {
-  // readAll(); //讀取全部資料
-
   table = $('#JSExecutionLog').DataTable({
-    // "lengthChange": false,
-    // searching: true,
     pageLength: 10,
     dom: 'Brft<"bottom"lp>',
     buttons: ['excel'],
-    // data: JSExecutionLogData,
     columns: jsExecutionLogColumns,
     scrollX: true,
   });
@@ -103,44 +98,29 @@ function query() {
   const dateVal = $('#date').val();
   const newDateVal = dateVal.replace(/\//g, '-');
   const dateRangeVal = $('#dateRange').val();
-
-  dateRangeOptions.forEach((item) => {
-    if (item.value == dateRangeVal) {
-      $.ajax({
-        url: `${apiUrl}/query/`,
-        type: 'POST',
-        data: { startDate: newDateVal, dateInterval: item.label },
-        dataType: 'json',
-        success: function (response) {
-          console.log(response);
-          // location.reload();
-          const res = response
-          res.forEach((item) => {
-            console.log('item.MQCLI =', item.MQCLI);
-            let mqcli
-            if (item.MQCLI) {
-              mqcli = JSON.stringify(item.MQCLI)
-            } else {
-              mqcli = JSON.stringify({})
-            }
-
-            console.log('mqcli =', mqcli);
-            item.MQCLI = mqcli
-          })
-
-          //將資料新增到table上
-          table.rows.add(res).draw();
-        },
-        error: function (xhr) {
-          console.log('xhr =', xhr);
-          alert('Error: ' + xhr.status + ' ' + xhr.statusText);
-        },
-      });
+  const data = {
+    startDate: newDateVal,
+    dateInterval: dateRangeVal
+  };
+  table.clear();
+  $.ajax({
+    url: `${apiUrl}/query/`,
+    type: 'POST',
+    data: data,
+    dataType: 'json',
+    success: res => {
+      const { status, result } = res;
+      if (status != 'success') {
+        throw 'status is not success';
+      } else {
+        const { data } = result;
+        table.rows.add(data).draw();
+      }
+    },
+    error: err => {
+      console.log(err);
     }
   });
-
-  // console.log('dateVal =', dateVal);
-  // console.log('dateRangeVal =', dateRangeVal);
 }
 //--
 

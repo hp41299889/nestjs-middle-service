@@ -13,13 +13,16 @@ export class JSExecutionLog {
     scriptID: number;
 
     @Prop()
+    scriptName: string;
+
+    @Prop()
     scriptVersion: number;
 
     @Prop()
     processDatetime: Date;
 
     @Prop()
-    precessParam: string;
+    processParam: string;
 
     @Prop()
     processStatus: string;

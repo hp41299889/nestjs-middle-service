@@ -1,0 +1,15 @@
+jsFile
+node_modules
+src
+test
+.dockerignore
+.eslintrc.js
+.gitignore
+.prettierrc
+Dockerfile
+nest-cli.json
+package-lock.json
+README.md
+sample.env
+tsconfig.build.json
+tsconfig.json

@@ -39,31 +39,31 @@ const jsExecutionLogColumns = [
     title: '紀錄ID',
   },
   {
-    data: 'scheduleID',
-    title: '排程ID',
+    data: 'scriptID',
+    title: '腳本ID',
   },
   {
-    data: 'scheduleName',
-    title: '排程名稱',
+    data: 'scriptName',
+    title: '腳本名稱',
   },
   {
-    data: 'scheduleType',
-    title: '排程類型',
+    data: 'scriptVersion',
+    title: '腳本版本',
   },
   {
     data: 'processDatetime',
     title: '執行日期時間',
   },
   {
+    data: 'processParam',
+    title: '帶入參數',
+  },
+  {
     data: 'processStatus',
     title: '執行狀態',
   },
   {
-    data: 'schedule',
-    title: '排程命令',
-  },
-  {
-    data: 'MQCLI',
-    title: 'MQCLI命令',
+    data: 'processReturn',
+    title: '執行結果',
   },
 ]

@@ -50,6 +50,10 @@ export class JSExecutionLogModelService {
                 .find()
                 .where('processDatetime').gt(startTime).lt(endTime)
                 .exec();
+            docs.map(doc => {
+                doc.logID = JSON.stringify(doc._id);
+            });
+            this.logger.warn(docs);
             return docs;
         } catch (err) {
             this.logger.error('findTimePeriod fail');

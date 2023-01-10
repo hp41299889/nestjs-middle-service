@@ -12,7 +12,11 @@ import { JSScriptController } from './jsScript.controller';
 import { JSScriptService } from './jsScript.service';
 
 @Module({
-  imports: [HttpResponseModule, JSScriptModelModule, ChildJSModule],
+  imports: [
+    HttpResponseModule,
+    JSScriptModelModule,
+    ChildJSModule
+  ],
   providers: [JSScriptService],
   controllers: [JSScriptController]
 })
