@@ -1,0 +1,27 @@
+<script src="/js/auth.js"></script>
+<div class='modal' id='loginModal' tabindex='-1' aria-labelledby='loginLabel' aria-hidden='true'
+    data-bs-backdrop='static'>
+    <div class='modal-dialog modal-dialog-centered'>
+        <div class='modal-content'>
+            <div class='modal-header'>
+                <h1 class='modal-title fs-5 fw-bolder' id='loginLabel'>登入</h1>
+                <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close'></button>
+            </div>
+            <div class='modal-body'>
+                <div class='d-flex mb-3 row'>
+                    <div class='col-6'>
+                        <label for='account' class='col-form-label fw-bolder'>帳號:</label>
+                        <input type='text' class='form-control' id='account' />
+                    </div>
+                    <div class='col-6'>
+                        <label for='password' class='col-form-label fw-bolder'>密碼:</label>
+                        <input type='password' class='form-control' id='password' placeholder="．．．．．．" />
+                    </div>
+                </div>
+            </div>
+            <div class='modal-footer'>
+                <button type='button' class='btn btn-primary' id="loginBtn">登入</button>
+            </div>
+        </div>
+    </div>
+</div>

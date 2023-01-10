@@ -14,27 +14,25 @@ export class AuthService {
     ) { };
     private readonly logger = new Logger(AuthService.name);
 
-    async login(dto: LoginDto): Promise<string> {
+    async login(dto: LoginDto): Promise<void> {
         try {
             this.logger.debug('login');
             const admin: LoginDto = await this.setupJsonService.readByKey('admin');
             const { account, password } = admin;
             await this.checkAccount(dto.account, account);
             await this.checkPassword(dto.password, password);
-            return 'login success';
         } catch (err) {
             this.logger.error('login fail');
             throw err;
         };
     };
 
-    async logout(req: Request): Promise<string> {
+    async logout(req: Request): Promise<void> {
         try {
             this.logger.debug('logout');
             req.session.destroy(() => {
                 this.logger.debug('session destoried');
             });
-            return 'logout success';
         } catch (err) {
             this.logger.error('logout fail');
             this.logger.error(err);

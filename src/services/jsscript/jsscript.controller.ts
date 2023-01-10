@@ -37,13 +37,13 @@ export class JSScriptController {
         try {
             this.logger.debug('/JSScript/view');
             if (!session.token) {
-                res.status(200).render('');
+                await this.httpResponseService.redirectView(res, 200, '/MiddleService/Auth/view');
             } else {
-                res.status(200).render('');
+                await this.httpResponseService.renderView(res, 200, 'jsScript');
             };
         } catch (err) {
             this.logger.error('/JSScript/view fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -56,7 +56,7 @@ export class JSScriptController {
             this.httpResponseService.success(res, 201, result);
         } catch (err) {
             this.logger.error('/JSScript/create fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -69,7 +69,7 @@ export class JSScriptController {
             this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/JSScript/readAll fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -82,7 +82,7 @@ export class JSScriptController {
             this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/JSScript/readOneByID fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -95,7 +95,7 @@ export class JSScriptController {
             this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/JSScript/update fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -108,7 +108,7 @@ export class JSScriptController {
             this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/JSScript/delete fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -121,7 +121,7 @@ export class JSScriptController {
             this.httpResponseService.success(res, 200, 'childJS executed');
         } catch (err) {
             this.logger.error('/JSScript/test fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };

@@ -1,0 +1,173 @@
+<script src='/js/option.js'></script>
+<script src='/js/setup.js'></script>
+<div class='m-4'>
+  <h1>設定</h1>
+  <div class='card'>
+    <div class='card-body'>
+      <form>
+        <div class='row w-50'>
+          <div class='col-6 mb-3'>
+            <label for='enableMiddleService' class='col-form-label fw-bolder'>啟用
+              Middle Service：</label>
+            <select class='form-select' id='enableMiddleService' required></select>
+          </div>
+          <hr />
+        </div>
+        <h3 class="fw-bold">RabbitMQ BossQueue</h3>
+        <div class='d-flex'>
+          <div class='row w-50'>
+            <div class='col-6'>
+              <label for='bossRabbitMqIp' class='col-form-label fw-bolder'>RabbitMq IP：</label>
+              <input type='text' class='form-control' id='bossRabbitMqIp' required />
+            </div>
+            <div class='col-6'>
+              <label for='bossRabbitMqPort' class='col-form-label fw-bolder'>RabbitMq Port：</label>
+              <input type='text' class='form-control' id='bossRabbitMqPort' required />
+            </div>
+          </div>
+          <div class='row w-50 rabbitMqUser'>
+            <div class='col-6'>
+              <label for='bossRabbitMqAccount' class='col-form-label fw-bolder'>RabbitMq 帳號：</label>
+              <input type='text' class='form-control' id='bossRabbitMqAccount' required />
+            </div>
+            <div class='col-6'>
+              <label for='bossRabbitMqPassword' class='col-form-label fw-bolder'>RabbitMq 密碼：</label>
+              <input type='password' class='form-control' id='bossRabbitMqPassword' required />
+            </div>
+          </div>
+        </div>
+        <div class='row w-50'>
+          <div class='col-6 mb-3'>
+            <label for='bossQueueNameInput' class='col-form-label fw-bolder'>輸入Queue名稱：</label>
+            <input type='text' class='form-control' id='bossQueueNameInput' required />
+          </div>
+          <div class='col-6 mb-3'>
+            <label for='bossQueueNameOutput' class='col-form-label fw-bolder'>輸出Queue名稱：</label>
+            <input type='text' class='form-control' id='bossQueueNameOutput' required />
+          </div>
+          <hr />
+        </div>
+        <h3 class="fw-bold">RabbitMQ JobQueue</h3>
+        <div class='d-flex'>
+          <div class='row w-50'>
+            <div class='col-6'>
+              <label for='jobRabbitMqIp' class='col-form-label fw-bolder'>RabbitMq IP：</label>
+              <input type='text' class='form-control' id='jobRabbitMqIp' required />
+            </div>
+            <div class='col-6'>
+              <label for='jobRabbitMqPort' class='col-form-label fw-bolder'>RabbitMq Port：</label>
+              <input type='text' class='form-control' id='jobRabbitMqPort' required />
+            </div>
+          </div>
+          <div class='row w-50 rabbitMqUser'>
+            <div class='col-6'>
+              <label for='jobRabbitMqAccount' class='col-form-label fw-bolder'>RabbitMq 帳號：</label>
+              <input type='text' class='form-control' id='jobRabbitMqAccount' required />
+            </div>
+            <div class='col-6'>
+              <label for='jobRabbitMqPassword' class='col-form-label fw-bolder'>RabbitMq 密碼：</label>
+              <input type='password' class='form-control' id='jobRabbitMqPassword' required />
+            </div>
+          </div>
+        </div>
+        <div class='row w-50'>
+          <div class='col-6 mb-3'>
+            <label for='jobQueueNameInput' class='col-form-label fw-bolder'>輸入Queue名稱：</label>
+            <input type='text' class='form-control' id='jobQueueNameInput' required />
+          </div>
+          <div class='col-6 mb-3'>
+            <label for='jobQueueNameOutput' class='col-form-label fw-bolder'>輸出Queue名稱：</label>
+            <input type='text' class='form-control' id='jobQueueNameOutput' required />
+          </div>
+          <hr />
+        </div>
+        <div class='row w-50'>
+          <div class='col-6 mb-3'>
+            <label for='account' class='col-form-label fw-bolder'>登入帳號：</label>
+            <input type='text' class='form-control' id='account' required />
+          </div>
+          <div class='col-6 mb-3'>
+            <label for='password' class='col-form-label fw-bolder'>登入密碼：</label>
+            <input type='password' class='form-control' id='password' required />
+          </div>
+          <hr />
+        </div>
+        <div class='d-flex'>
+          <div class='row w-50'>
+            <div class='col-6'>
+              <label for='postgreSqlIp' class='col-form-label fw-bolder'>PostgreSQL IP：</label>
+              <input type='text' class='form-control' id='postgreSqlIp' required />
+            </div>
+            <div class='col-6'>
+              <label for='postgreSqlPort' class='col-form-label fw-bolder'>PostgreSQL Port：</label>
+              <input type='text' class='form-control' id='postgreSqlPort' required />
+            </div>
+          </div>
+          <div class='row w-50 postgreUser'>
+            <div class='col-6'>
+              <label for='postgreSqlAccount' class='col-form-label fw-bolder'>PostgreSQL 帳號：</label>
+              <input type='text' class='form-control' id='postgreSqlAccount' required />
+            </div>
+            <div class='col-6'>
+              <label for='postgreSqlPassword' class='col-form-label fw-bolder'>PostgreSQL 密碼：</label>
+              <input type='password' class='form-control' id='postgreSqlPassword' required />
+            </div>
+          </div>
+        </div>
+        <div class='row w-50'>
+          <div class='col-6 mb-3'>
+            <label for='postgreSqlDbName' class='col-form-label fw-bolder'>PostgreSQL DB 名稱：</label>
+            <input type='text' class='form-control' id='postgreSqlDbName' required />
+          </div>
+          <div class='col-6 mb-3 align-self-end'>
+            <button type='button' id='postgreBtn' class='btn btn-outline-primary'
+              onclick='postgreSqlTest()'>連線測試</button>
+            <span id="postgreSuccess" class='badge text-bg-success mx-3 px-3 d-none'>成功</span>
+            <span id="postgreFail" class='badge text-bg-danger mx-3 px-3 d-none'>失敗</span>
+          </div>
+          <hr />
+        </div>
+        <div class='d-flex'>
+          <div class='row w-50'>
+            <div class='col-6'>
+              <label for='mongoIp' class='col-form-label fw-bolder'>Mongo
+                IP：</label>
+              <input type='text' class='form-control' id='mongoIp' required />
+            </div>
+            <div class='col-6'>
+              <label for='mongoPort' class='col-form-label fw-bolder'>Mongo
+                Port：</label>
+              <input type='text' class='form-control' id='mongoPort' required />
+            </div>
+          </div>
+          <div class='row w-50 mongoUser'>
+            <div class='col-6'>
+              <label for='mongoAccount' class='col-form-label fw-bolder'>Mongo 帳號：</label>
+              <input type='text' class='form-control' id='mongoAccount' required />
+            </div>
+            <div class='col-6'>
+              <label for='mongoPassword' class='col-form-label fw-bolder'>Mongo 密碼：</label>
+              <input type='password' class='form-control' id='mongoPassword' required />
+            </div>
+          </div>
+        </div>
+        <div class='row w-50'>
+          <div class='col-6 mb-3'>
+            <label for='mongoDbName' class='col-form-label fw-bolder'>Mongo
+              DB 名稱：</label>
+            <input type='text' class='form-control' id='mongoDbName' required />
+          </div>
+          <div class='col-6 mb-3 align-self-end'>
+            <button type='button' id='mongoBtn' class='btn btn-outline-primary' onclick='mongoTest()'>連線測試</button>
+            <span id="mongoSuccess" class='badge text-bg-success mx-3 px-3 d-none'>成功</span>
+            <span id="mongoFail" class='badge text-bg-danger mx-3 px-3 d-none'>失敗</span>
+          </div>
+          <hr />
+        </div>
+        <div class="text-end">
+          <button id='saveBtn' onclick='save()' type='button' class='btn btn-primary'>儲存</button>
+        </div>
+      </form>
+    </div>
+  </div>
+</div>

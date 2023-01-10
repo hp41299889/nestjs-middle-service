@@ -25,6 +25,8 @@ export class AuthController {
     ) { };
 
     private readonly logger = new Logger(AuthController.name);
+    private readonly loginRedirectUrl = '/MiddleService/JSScript/view';
+    private readonly logoutRedirectUrl = '/MiddleService/Auth/view';
 
     //TODO render view
     @Get(viewRoute)
@@ -32,13 +34,13 @@ export class AuthController {
         try {
             this.logger.debug('/Auth/view');
             if (!session.token) {
-                res.status(200).render('');
+                await this.httpResponseService.renderView(res, 200, 'login');
             } else {
-                res.status(200).render('');
+                await this.httpResponseService.redirectView(res, 200, 'jsScript');
             };
         } catch (err) {
             this.logger.error('/Auth/view fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -49,15 +51,15 @@ export class AuthController {
             // this.logger.debug(this.config);
             this.logger.debug('/Auth/login');
             if (!session.token) {
-                const result = await this.authService.login(dto);
+                await this.authService.login(dto);
                 session.token = dto.account;
-                this.httpResponseService.success(res, 200, result);
+                await this.httpResponseService.redirectUrl(res, 200, this.loginRedirectUrl);
             } else {
-                this.httpResponseService.success(res, 200, 'session login success');
+                await this.httpResponseService.redirectUrl(res, 200, this.loginRedirectUrl);
             };
         } catch (err) {
             this.logger.error('/Auth/login fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -69,12 +71,12 @@ export class AuthController {
             if (!session.token) {
                 throw 'you are not login yet';
             } else {
-                const result = await this.authService.logout(req);
-                this.httpResponseService.success(res, 200, result);
+                await this.authService.logout(req);
+                await this.httpResponseService.redirectUrl(res, 200, this.logoutRedirectUrl);
             };
         } catch (err) {
             this.logger.error('/Auth/logout fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };

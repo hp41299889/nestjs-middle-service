@@ -1,0 +1,188 @@
+<script src='/js/column.js'></script>
+<script src='/js/option.js'></script>
+<script src='/js/schedule.js'></script>
+<link rel='stylesheet' href='/js/modules/dataTables/datatables.css' />
+<link rel='stylesheet' href='/js/modules/dataTables/Buttons-2.3.3/css/buttons.dataTables.min.css' />
+<link rel='stylesheet' href='/js/modules/dataTables/DataTables-1.13.1/css/dataTables.bootstrap5.min.css' />
+<script src='/js/modules/dataTables/datatables.js'></script>
+<script src='/js/modules/dataTables/JSZip-2.5.0/jszip.min.js'></script>
+<script src='/js/modules/dataTables/Buttons-2.3.3/js/dataTables.buttons.min.js'></script>
+<script src='/js/modules/dataTables/Buttons-2.3.3/js/buttons.html5.min.js'></script>
+<div class='m-4'>
+  <h1>排程</h1>
+  <div class='card'>
+    <div class='card-body'>
+      <div class='d-flex'>
+        <button type='button' id='add' class='btn btn-outline-primary' data-bs-toggle='modal'
+          data-bs-target='#scheduleModal' data-bs-title='新增' data-bs-whatever='new'>新增</button>
+        <button type='button' id='edit' class='btn btn-outline-primary' data-bs-toggle='modal'
+          data-bs-target='#scheduleModal' data-bs-title='修改' data-bs-whatever='edit'>修改</button>
+        <button type='button' id='clone' class='btn btn-outline-primary' data-bs-toggle='modal'
+          data-bs-target='#scheduleModal' data-bs-title='克隆' data-bs-whatever='clone'>克隆</button>
+        <button type='button' id='delete' class='btn btn-outline-primary' data-bs-toggle='modal'
+          data-bs-target='#deleteModal' data-bs-title='刪除'>刪除</button>
+        <button type='button' id='exportBtn' class='btn btn-outline-primary' onclick="exportExcel()">匯出</button>
+      </div>
+      <div class='searchBox w-100'>
+        <input id='searchFilter' placeholder='Search' class='searchFilter' />
+      </div>
+      <table id='schedule' class='display' style='width: 100%'>
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>
+<div class='modal fade' id='scheduleModal' tabindex='-1' aria-labelledby='scheduleModalLabel' aria-hidden='true'
+  data-bs-backdrop='static'>
+  <div class='modal-dialog modal-dialog-centered'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h1 class='modal-title fs-5 fw-bolder' id='scheduleModalLabel'>表單</h1>
+        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close' onclick='init()'></button>
+      </div>
+      <div class='modal-body' id='modalBody'>
+        <form>
+          <div class='d-flex mb-3 row'>
+            <div class='col-6'>
+              <label for='scheduleName' class='col-form-label fw-bolder'>排程名稱:</label>
+              <input type='text' class='form-control' id='scheduleName' aria-describedby='inputGroupPrepend' required />
+              <div class='invalid-feedback'>
+                不可為空
+              </div>
+            </div>
+            <div class='col-6'>
+              <label for='scheduleType' class='col-form-label fw-bolder'>排程類型:</label>
+              <select class='form-select' id='scheduleType' required></select>
+              <div class='invalid-feedback'>
+                尚未選擇
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div id='regular'>
+            <div class='d-flex'>
+              <label for='regularAdd' class='col-form-label fw-bolder addLabel'>定期排程:</label>
+              <div id='regularNoAdd' class='invalid-feedback noAdd'>
+                尚未新增排程
+              </div>
+            </div>
+            <div class='mb-3'>
+              <button type='button' class='btn btn-outline-primary' id='regularAdd'>新增</button>
+            </div>
+            <div id='regularRecord'>
+              <div class='d-flex mb-3 row d-none' id='regularTemplate'>
+                <div class='col-3'>
+                  <label for='regularWeek' class='col-form-label fw-bolder'>星期:</label>
+                  <select class='form-select' id='regularWeek' required>
+                    {{! <option id="regularWeekDefault" selected>一-日</option> }}
+                  </select>
+                  <div class='invalid-feedback'>
+                    尚未選擇
+                  </div>
+                </div>
+                <div class='col-3'>
+                  <label for='regularHour' class='col-form-label fw-bolder'>小時:</label>
+                  <select class='form-select' id='regularHour' required>
+                    {{! <option selected>0-23</option> }}
+                  </select>
+                  <div class='invalid-feedback'>
+                    尚未選擇
+                  </div>
+                </div>
+                <div class='col-3'>
+                  <label for='regularMinute' class='col-form-label fw-bolder'>分鐘:</label>
+                  <select class='form-select' id='regularMinute' required>
+                    {{! <option selected>0-59</option> }}
+                  </select>
+                  <div class='invalid-feedback'>
+                    尚未選擇
+                  </div>
+                </div>
+                <div class='col-3 formDeleteBtn'>
+                  <button type='button' class='btn btn-outline-danger regularDelete' id='regularDelete'
+                    onclick='deleteItem(this)'>刪除</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div id='cycle' class='d-none'>
+            <div class='d-flex'>
+              <label for='cycleAdd' class='col-form-label fw-bolder addLabel'>週期排程:</label>
+              <div id='cycleNoAdd' class='invalid-feedback noAdd'>
+                尚未新增排程
+              </div>
+            </div>
+            <div class='mb-3'>
+              <button type='button' class='btn btn-outline-primary' id='cycleAdd'>新增</button>
+            </div>
+            <div id='cycleRecord'>
+              <div class='d-flex mb-3 row d-none' id='cycleTemplate'>
+                <div class='col-3'>
+                  <label for='cycleHour' class='col-form-label fw-bolder'>每小時:</label>
+                  <select class='form-select' id='cycleHour' required></select>
+                  <div class='invalid-feedback'>
+                    尚未選擇
+                  </div>
+                </div>
+                <div class='col-3'>
+                  <label for='cycleMinute' class='col-form-label fw-bolder'>每分鐘:</label>
+                  <select class='form-select' id='cycleMinute' required></select>
+                  <div class='invalid-feedback'>
+                    尚未選擇
+                  </div>
+                </div>
+                <div class='col-3 formDeleteBtn'>
+                  <button type='button' class='btn btn-outline-danger' id='cycleDelete'
+                    onclick='deleteItem(this)'>刪除</button>
+                </div>
+              </div>
+            </div>
+          </div>
+          <hr />
+          <div class='mb-3'>
+            <label for='MQCLI' class='col-form-label fw-bolder'>MQCLI:</label>
+            <textarea class='form-control' id='MQCLI' placeholder='Text Area' required></textarea>
+            <div class='invalid-feedback'>
+              不可為空
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class='modal-footer'>
+        {{! <button type='button' class='btn btn-secondary' data-bs-dismiss='modal'>Close</button> }}
+        <button id='saveBtn' onclick='save()' type='button' class='btn btn-primary'>儲存</button>
+      </div>
+    </div>
+  </div>
+</div>
+<div class='modal fade' id='deleteModal' tabindex='-1' aria-labelledby='deleteModalLabel' aria-hidden='true'
+  data-bs-backdrop='static'>
+  <div class='modal-dialog modal-dialog-centered'>
+    <div class='modal-content'>
+      <div class='modal-header'>
+        <h1 class='modal-title fs-5 fw-bolder' id='deleteModalLabel'>刪除表單</h1>
+        <button type='button' class='btn-close' data-bs-dismiss='modal' aria-label='Close' onclick='initDel()'></button>
+      </div>
+      <div class='modal-body'>
+        <form>
+          <div class='d-flex mb-3 row'>
+            <div class='col-6'>
+              <label for='scheduleIdDel' class='col-form-label fw-bolder'>排程ID:</label>
+              <input type='text' class='form-control' id='scheduleIdDel' aria-describedby='inputGroupPrepend'
+                disabled />
+            </div>
+            <div class='col-6'>
+              <label for='scheduleNameDel' class='col-form-label fw-bolder'>排程名稱:</label>
+              <input type='text' class='form-control' id='scheduleNameDel' aria-describedby='inputGroupPrepend'
+                disabled />
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class='modal-footer'>
+        <button id='deleteBtn' onclick='del()' type='button' class='btn btn-danger'>確認後刪除</button>
+      </div>
+    </div>
+  </div>
+</div>

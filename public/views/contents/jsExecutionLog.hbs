@@ -1,0 +1,48 @@
+<link rel='stylesheet' href='/js/modules/dataTables/dlinkatatables.css' />
+<link rel='stylesheet' href='/js/modules/dataTables/Buttons-2.3.3/css/buttons.dataTables.min.css' />
+<link rel='stylesheet' href='/js/modules/dataTables/DataTables-1.13.1/css/dataTables.bootstrap5.min.css' />
+<link rel='stylesheet' href='/js/modules/bootstrap-datepicker-1.9.0-dist/css/bootstrap-datepicker3.min.css' />
+<script src='/js/modules/dataTables/datatables.js'></script>
+<script src='/js/modules/dataTables/JSZip-2.5.0/jszip.min.js'></script>
+<script src='/js/modules/dataTables/Buttons-2.3.3/js/dataTables.buttons.min.js'></script>
+<script src='/js/modules/dataTables/Buttons-2.3.3/js/buttons.html5.min.js'></script>
+<script src='/js/modules/bootstrap-datepicker-1.9.0-dist/js/bootstrap-datepicker.min.js'></script>
+<script src='/js/column.js'></script>
+<script src='/js/option.js'></script>
+<script src='/js/executionLog.js'></script>
+<div class='m-4'>
+  <h1>紀錄</h1>
+  <div id='searchCard' class='card'>
+    <div class='card-body'>
+      <h2 class="mb-3 fw-bolder">查詢條件：</h2>
+      <form class='row'>
+        <div class='col-4'>
+          <label for='date' class='col-form-label fw-bolder'>開始日期：</label>
+          <input type='text' class='form-control datepicker_input' id='date' required />
+        </div>
+        <div class="col-6">
+          <label for='scheduleType' class='col-form-label fw-bolder'>日期區間：</label>
+          <select class='form-select' id='dateRange' required></select>
+        </div>
+        <div class='col-2 align-self-end'>
+          <button type='button' id='exportBtn' class='btn btn-primary' onclick='query()'>查詢</button>
+        </div>
+      </form>
+    </div>
+  </div>
+  <div id='tableCard' class='card'>
+    <div class='card-body'>
+      <h2 class="mb-3 fw-bolder">查詢條件：</h2>
+      <div>
+        <button type='button' id='exportBtn' class='btn btn-outline-primary' onclick='exportExcel()'>匯出</button>
+      </div>
+      <div class='searchBox w-100'>
+        <input id='searchFilter' placeholder='Search' class='searchFilter' />
+      </div>
+      <table id='executionLog' class='display' style='width: 100%'>
+        <thead></thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </div>
+</div>

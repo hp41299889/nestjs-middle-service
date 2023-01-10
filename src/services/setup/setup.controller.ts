@@ -34,13 +34,13 @@ export class SetupController {
         try {
             this.logger.debug('/Setup/view');
             if (!session.token) {
-                res.status(200).render('');
+                await this.httpResponseService.redirectView(res, 200, '/MiddleService/Auth/view');
             } else {
-                res.status(200).render('');
+                await this.httpResponseService.renderView(res, 200, 'setup');
             };
         } catch (err) {
             this.logger.error('/Setup/view fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -53,7 +53,7 @@ export class SetupController {
             this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/Setup/read fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -66,7 +66,7 @@ export class SetupController {
             this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/Setup/postgresConnectTest fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -79,7 +79,7 @@ export class SetupController {
             this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/Setup/mongoConnectTest fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -92,7 +92,7 @@ export class SetupController {
             this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/Setup/save fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };

@@ -31,13 +31,13 @@ export class JSExecutionLogController {
         try {
             this.logger.debug('/JSExecutionLog/view');
             if (!session.token) {
-                res.status(200).render('');
+                await this.httpResponseService.redirectView(res, 200, '/MiddleService/Auth/view');
             } else {
-                res.status(200).render('');
+                await this.httpResponseService.renderView(res, 200, 'jsExecutionLog');
             };
         } catch (err) {
             this.logger.error('/JSExecutionLog/view fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
@@ -50,7 +50,7 @@ export class JSExecutionLogController {
             this.httpResponseService.success(res, 200, result);
         } catch (err) {
             this.logger.error('/JSExecutionLog/query fail');
-            this.httpResponseService.fail(res, err);
+            this.httpResponseService.fail(res, 400, err);
             throw err;
         };
     };
