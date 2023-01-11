@@ -9,26 +9,54 @@
 <script src='/js/modules/dataTables/Buttons-2.3.3/js/buttons.html5.min.js'></script>
 <div class='m-4'>
   <h1>JS腳本</h1>
-  <div class='card'>
-    <div class='card-body'>
-      <div class='d-flex'>
-        <button type='button' id='add' class='btn btn-outline-primary' data-bs-toggle='modal'
-          data-bs-target='#scriptModal' data-bs-title='新增' data-bs-whatever='new'>新增</button>
-        <button type='button' id='edit' class='btn btn-outline-primary' data-bs-toggle='modal'
-          data-bs-target='#scriptModal' data-bs-title='修改' data-bs-whatever='edit'>修改</button>
-        <button type='button' id='clone' class='btn btn-outline-primary' data-bs-toggle='modal'
-          data-bs-target='#scriptModal' data-bs-title='克隆' data-bs-whatever='clone'>克隆</button>
-        <button type='button' id='delete' class='btn btn-outline-primary' data-bs-toggle='modal'
-          data-bs-target='#deleteModal' data-bs-title='刪除'>刪除</button>
-        <button type='button' id='exportBtn' class='btn btn-outline-primary' onclick="exportExcel()">匯出</button>
+  <div class='cards'>
+    <div class='card'>
+      <div class='card-body'>
+        <div class='d-flex'>
+          <button type='button' id='add' class='btn btn-outline-primary' data-bs-toggle='modal'
+            data-bs-target='#scriptModal' data-bs-title='新增' data-bs-whatever='new'>新增</button>
+          <button type='button' id='edit' class='btn btn-outline-primary' data-bs-toggle='modal'
+            data-bs-target='#scriptModal' data-bs-title='修改' data-bs-whatever='edit'>修改</button>
+          <button type='button' id='clone' class='btn btn-outline-primary' data-bs-toggle='modal'
+            data-bs-target='#scriptModal' data-bs-title='克隆' data-bs-whatever='clone'>克隆</button>
+          <button type='button' id='delete' class='btn btn-outline-primary' data-bs-toggle='modal'
+            data-bs-target='#deleteModal' data-bs-title='刪除'>刪除</button>
+          <button type='button' id='exportBtn' class='btn btn-outline-primary' onclick="exportExcel()">匯出</button>
+        </div>
+        <div class='searchBox w-100'>
+          <input id='searchFilter' placeholder='Search' class='searchFilter' />
+        </div>
+        <table id='script' class='display' style='width: 100%'>
+          <thead></thead>
+          <tbody></tbody>
+        </table>
       </div>
-      <div class='searchBox w-100'>
-        <input id='searchFilter' placeholder='Search' class='searchFilter' />
+    </div>
+    <div id="script-card" class='card'>
+      <div class='script-display'>
+        <h5 id="title" class='item'>程式碼顯示框:</h5>
+        <div class='item'>
+          <div id="js-area" class='card'>
+            <span class="title">JavaScript</span>
+            <textarea class='frame' disabled="disabled"></textarea>
+          </div>
+        </div>
+        <div class="item">
+          <div id="items">
+            <div class="js">
+              <span>輸入:</span>
+              <textarea class="script" placeholder="JavaScript"></textarea>
+            </div>
+            <div class="js-test-btn">
+              <button class="btn btn-outline-primary">JS腳本測試</button>
+            </div>
+            <div class="js">
+              <span>輸出:</span>
+              <textarea class="script" placeholder="JavaScript"></textarea>
+            </div>
+          </div>
+        </div>
       </div>
-      <table id='script' class='display' style='width: 100%'>
-        <thead></thead>
-        <tbody></tbody>
-      </table>
     </div>
   </div>
 </div>

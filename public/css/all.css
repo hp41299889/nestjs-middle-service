@@ -4,30 +4,96 @@
   align-self: center;
   text-align: end;
 }
+
 .navbar .navForm .navButton {
   width: 80px;
 }
 
+.cards {
+  display: flex;
+}
+
 .card {
   margin-top: 20px;
+  margin-right: 20px;
 }
+
+.card .title {
+  padding: 10px;
+}
+
+#script-card {
+  max-width: 800px;
+  padding: 10px;
+}
+
+.card .script-display {
+  display: flex;
+  flex-wrap: wrap;
+}
+
+.card .script-display #js-area {
+  min-height: 400px;
+}
+
+.card .script-display .item {
+  min-width: 770px;
+}
+
+.card .script-display .item #items {
+  display: flex;
+  flex-wrap: wrap;
+  min-height: 170px;
+  max-width: 748px;
+  justify-content: space-between;
+}
+
+.card .script-display .item #items .js {
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: column;
+}
+
+.card .script-display .item #items .js .script {
+  min-width: 300px;
+  min-height: 150px;
+  resize: none;
+}
+
+.card .script-display .item .js-test-btn {
+  display: flex;
+  align-items: center;
+}
+
+.card .frame {
+  background-color: #000000;
+  color: aliceblue;
+  min-height: 354px;
+  resize: none;
+}
+
 .card .card-body .btn {
   margin-right: 10px;
 }
+
 .card .card-body #edit,
 .card .card-body #clone,
 .card .card-body #delete {
   display: none;
 }
+
 .card .card-body .showBtn {
   display: inline-block !important;
 }
+
 .card .card-body .searchBox {
   text-align: end;
 }
+
 .card .card-body .searchBox .searchFilter {
   margin-bottom: 10px;
 }
+
 .card .card-body .dataTables_wrapper .bottom {
   margin-top: 20px;
 }
@@ -35,6 +101,7 @@
 .modal .modal-dialog .modal-content .modal-body .addLabel {
   width: 100px;
 }
+
 .modal .modal-dialog .modal-content .modal-body .noAdd {
   padding-top: calc(0.375rem + 1px);
   padding-bottom: calc(0.375rem + 1px);
@@ -62,62 +129,79 @@
 #calendar {
   margin-left: 35px;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid {
   border: unset;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid thead tr th {
   border-right: unset;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid thead tr th .fc-col-header .fc-timegrid-axis {
   border: unset;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid thead tr th .fc-col-header .fc-col-header-cell {
   border-left: unset;
   border-right: unset;
   text-align: unset;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid thead tr th .fc-col-header .fc-col-header-cell a.fc-col-header-cell-cushion {
   color: #000000;
   text-decoration: unset;
   font-size: 1.5rem;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid tbody .fc-scroller-harness .fc-timegrid-body .fc-timegrid-slots .fc-timegrid-slot-label {
   border: unset;
   vertical-align: unset;
   color: #b2b2b2;
   font-weight: bold;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid tbody .fc-scroller-harness .fc-timegrid-body .fc-timegrid-cols .fc-timegrid-col .fc-timegrid-col-frame .fc-timegrid-col-events .selfCell {
   position: absolute;
   height: 121px;
   overflow-y: auto;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid tbody .fc-scroller-harness .fc-timegrid-body .fc-timegrid-cols .fc-timegrid-col .fc-timegrid-col-frame .fc-timegrid-col-events .selfCell::-webkit-scrollbar {
   display: none;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid tbody .fc-scroller-harness .fc-timegrid-body .fc-timegrid-cols .fc-timegrid-col .fc-timegrid-col-frame .fc-timegrid-col-events .selfCell .fc-timegrid-event-harness a.fc-timegrid-event .fc-event-main {
   display: flex;
   justify-content: space-between;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid tbody .fc-scroller-harness .fc-timegrid-body .fc-timegrid-cols .fc-timegrid-col .fc-timegrid-col-frame .fc-timegrid-col-events .selfCell .fc-timegrid-event-harness a.fc-timegrid-event .fc-event-main .fc-event-main-frame {
   word-break: break-all;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid tbody .fc-scroller-harness .fc-timegrid-body .fc-timegrid-cols .fc-timegrid-col .fc-timegrid-col-frame .fc-timegrid-col-events .selfCell .fc-timegrid-event-harness a.fc-timegrid-event .fc-event-main .fc-event-main-frame .fc-event-title {
   top: 13px;
   padding-left: 5px;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid tbody .fc-scroller-harness .fc-timegrid-body .fc-timegrid-cols .fc-timegrid-col .fc-timegrid-col-frame .fc-timegrid-col-events .selfCell .fc-timegrid-event-harness a.fc-timegrid-event .fc-event-main .twoBtnSpace {
   width: 68px;
   white-space: nowrap;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid tbody .fc-scroller-harness .fc-timegrid-body .fc-timegrid-cols .fc-timegrid-col .fc-timegrid-col-frame .fc-timegrid-col-events .selfCell .fc-timegrid-event-harness a.fc-timegrid-event .fc-event-main .oneBtnSpace {
   width: 34px;
   white-space: nowrap;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid tbody .fc-scroller-harness .fc-timegrid-body .fc-timegrid-cols .fc-timegrid-col .fc-timegrid-col-frame .fc-timegrid-col-events .selfCell .fc-timegrid-event-harness a.fc-timegrid-event .fc-event-main .monitorBtn {
   border: unset;
   padding: 5px;
 }
+
 #calendar .fc-timegrid .fc-scrollgrid tbody .fc-scroller-harness .fc-timegrid-body .fc-timegrid-cols .fc-timegrid-col .fc-timegrid-col-frame .fc-timegrid-col-events .selfCell .fc-timegrid-event-harness a.fc-timegrid-event .fc-event-main .monitorBtn .monitorIcon {
   font-size: 1.5rem;
-}/*# sourceMappingURL=all.css.map */
+}
+
+/*# sourceMappingURL=all.css.map */
