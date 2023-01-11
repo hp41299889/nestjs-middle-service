@@ -3,10 +3,14 @@
 <link rel='stylesheet' href='/js/modules/dataTables/datatables.css' />
 <link rel='stylesheet' href='/js/modules/dataTables/Buttons-2.3.3/css/buttons.dataTables.min.css' />
 <link rel='stylesheet' href='/js/modules/dataTables/DataTables-1.13.1/css/dataTables.bootstrap5.min.css' />
+<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css' />
 <script src='/js/modules/dataTables/datatables.js'></script>
 <script src='/js/modules/dataTables/JSZip-2.5.0/jszip.min.js'></script>
 <script src='/js/modules/dataTables/Buttons-2.3.3/js/dataTables.buttons.min.js'></script>
 <script src='/js/modules/dataTables/Buttons-2.3.3/js/buttons.html5.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js'></script>
+<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/lint/javascript-lint.min.js'></script>
 <div class='m-4'>
   <h1>JS腳本</h1>
   <div class='cards'>
@@ -38,21 +42,21 @@
         <div class='item'>
           <div id="js-area" class='card'>
             <span class="title">JavaScript</span>
-            <textarea class='frame' disabled="disabled"></textarea>
+            <textarea id="script-area" disabled="disabled"></textarea>
           </div>
         </div>
         <div class="item">
           <div id="items">
             <div class="js">
               <span>輸入:</span>
-              <textarea class="script" placeholder="JavaScript"></textarea>
+              <textarea id='script-input' class="script" placeholder="JavaScript"></textarea>
             </div>
             <div class="js-test-btn">
-              <button class="btn btn-outline-primary">JS腳本測試</button>
+              <button class="btn btn-outline-primary" onclick="testJS()">JS腳本測試</button>
             </div>
             <div class="js">
               <span>輸出:</span>
-              <textarea class="script" placeholder="JavaScript"></textarea>
+              <textarea id='script-output' class="script" placeholder="JavaScript" disabled="disabled"></textarea>
             </div>
           </div>
         </div>

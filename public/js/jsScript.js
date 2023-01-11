@@ -2,6 +2,8 @@ const apiUrl = '/MiddleService/JSScript';
 let table;
 let datas = {};
 let state = '';
+let cmScriptDisplay;
+let cmInput;
 
 $(document).ready(function () {
   readAll(); //讀取全部資料
@@ -32,6 +34,7 @@ $(document).ready(function () {
   tableRowClick(); //點擊列觸發反藍、按鈕顯示、sessionStoraget儲存
   modalTitle(); //動態 modal title
   fillInDelModal(); //刪除Modal開啟時自動帶入資料
+  codeMirror();
 });
 
 //讀取全部資料(API-005)
@@ -83,6 +86,8 @@ function tableRowClick() {
     $('#edit').addClass('showBtn');
     $('#clone').addClass('showBtn');
     $('#delete').addClass('showBtn');
+    $('#script-area').val(sessionStorage.getItem('scriptContent'));
+    cmScriptDisplay.setValue(sessionStorage.getItem('scriptContent'));
   });
 }
 //--
@@ -275,3 +280,46 @@ function initDel() {
 function exportExcel() {
   $('button.buttons-excel').trigger('click');
 }
+
+//code mirror
+const codeMirror = () => {
+  const scriptArea = document.getElementById('script-area');
+  const inputArea = document.getElementById('script-input');
+  cmScriptDisplay = CodeMirror.fromTextArea(scriptArea, {
+    mode: 'javascript',
+    lineNumbers: true,
+    pasteLinesPerSelection: true,
+    // lineWrapping: true,
+    lineSeparator: ';',
+    readOnly: true,
+  });
+  // cmInput = CodeMirror.fromTextArea(inputArea, {
+  //   mode: 'json'
+  // })
+};
+
+const testJS = () => {
+  const scriptID = sessionStorage.getItem('scriptID');
+  const scriptVersion = sessionStorage.getItem('scriptVersion');
+  const input = $('#script-input').val();
+  const data = {
+    scriptID: scriptID,
+    scriptVersion: scriptVersion,
+    input: JSON.parse(input)
+  };
+
+  $.ajax({
+    url: `${apiUrl}/test`,
+    type: 'POST',
+    data: data,
+    dataType: 'json',
+    success: res => {
+      console.log('res', res);
+      const response = JSON.stringify(res);
+      $('#script-output').val(response);
+    },
+    error: err => {
+      console.log('err', err);
+    },
+  })
+};

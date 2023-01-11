@@ -65,11 +65,37 @@
   align-items: center;
 }
 
-.card .frame {
+.CodeMirror.cm-s-default {
   background-color: #000000;
   color: aliceblue;
-  min-height: 354px;
-  resize: none;
+}
+
+.CodeMirror-code .CodeMirror-line .cm-keyword {
+  color: rgb(204, 143, 240);
+}
+
+.CodeMirror-code .CodeMirror-line .cm-def {
+  color: aliceblue;
+}
+
+.CodeMirror-code .CodeMirror-line .cm-operator {
+  color: rgb(87, 176, 253);
+}
+
+.CodeMirror-code .CodeMirror-line .cm-variable {
+  color: rgb(111, 255, 135);
+}
+
+.CodeMirror-code .CodeMirror-line .cm-string {
+  color: aliceblue;
+}
+
+.CodeMirror-code .CodeMirror-line .cm-property {
+  color: aliceblue;
+}
+
+.CodeMirror-code .CodeMirror-line .cm-number {
+  color: aliceblue;
 }
 
 .card .card-body .btn {
