@@ -1,7 +1,7 @@
 //packages
 import { Injectable, Logger } from '@nestjs/common';
 import { join } from 'path';
-import { writeFileSync, existsSync, mkdirSync } from 'fs';
+import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 
 //models
 import { JSScript } from 'src/models/postgres/jsScript/jsScriptModel.entity';
@@ -9,7 +9,7 @@ import { CreateJSExecutionLogDto } from 'src/models/mongo/js-execution-log/jsExe
 import { JSScriptModelService } from 'src/models/postgres/jsScript/jsScriptModel.service';
 import { JSExecutionLogModelService } from 'src/models/mongo/js-execution-log/jsExecutionLogModel.service';
 //dtos
-import { ChildJSDto } from './childJS.dto';
+import { ChildJSDto, JSFileDto } from './childJS.dto';
 //services
 import { ChildService } from '../child/child.service';
 
@@ -31,15 +31,27 @@ export class ChildJSService {
             this.logger.debug('execChildJS');
             const { scriptID, scriptVersion, input } = dto;
             const jsScript = await this.jsScriptModel.readOneByID(scriptID);
+            await this.nodeRun(jsScript, scriptVersion, input);
+        } catch (err) {
+            this.logger.error('execChildJS fail');
+            throw err;
+        };
+    };
+
+    async gernerateJSFile(dto: JSFileDto): Promise<void> {
+        try {
+            this.logger.debug('gernerateJSFile');
+            const { scriptID, scriptVersion } = dto;
+            const jsScript = await this.jsScriptModel.readOneByID(scriptID);
             const { scriptName, scriptPackage } = jsScript;
             const cwd = join(this.jsFileDir, scriptName, scriptVersion.toString());
             const jsFile = join(cwd, `${scriptName}.js`);
             await this.createJSFile(jsScript, jsFile);
             await this.npmInit(cwd);
             await this.npmInstall(cwd, scriptPackage);
-            await this.nodeRun(jsScript, scriptVersion, input);
+            await this.addGetArgs(jsFile);
         } catch (err) {
-            this.logger.error('execChildJS fail');
+            this.logger.error('gernerateJSFile fail');
             throw err;
         };
     };
@@ -49,8 +61,6 @@ export class ChildJSService {
             const { scriptName, scriptVersion, scriptContent } = jsScript;
             const jsVersionDir = join(this.jsFileDir, scriptName, scriptVersion.toString());
             await this.createJSVersionDir(scriptName, jsVersionDir);
-            this.logger.warn(jsFileDir);
-            this.logger.warn(scriptContent);
             if (!existsSync(jsFileDir)) {
                 this.logger.debug('createJSFile');
                 writeFileSync(jsFileDir, scriptContent);
@@ -78,7 +88,6 @@ export class ChildJSService {
     private async createJSDir(jsDir: string): Promise<void> {
         try {
             if (!existsSync(jsDir)) {
-                this.logger.warn(jsDir);
                 this.logger.debug('createJSDir');
                 mkdirSync(jsDir);
             };
@@ -108,7 +117,7 @@ export class ChildJSService {
             this.logger.debug('npmInstall');
             const cmd = 'npm install';
             const cmdPackages = await this.addPackages(cmd, scriptPackage);
-            this.logger.log(cmdPackages);
+            this.logger.debug(cmdPackages);
             await this.childService.execChild(cmdPackages, cwd);
         } catch (err) {
             this.logger.error('npmInstall fail');
@@ -116,20 +125,53 @@ export class ChildJSService {
         };
     };
 
+    private async addGetArgs(jsFile: string): Promise<void> {
+        try {
+            this.logger.debug('addGetArgs');
+            const origin = readFileSync(jsFile);
+            const getArgs = `
+            const getArgs = () => {
+                const args = {};
+                let key;
+                process.argv.slice(2).forEach((arg, index, array) => {
+                    if (arg.startsWith('--')) {
+                        key = arg.slice(2);
+                        args[key] = '';
+                    } else {
+                        args[key] += arg;
+                        if (array[index + 1] && !array[index + 1].startsWith('--')) {
+                            args[key] += ' ';
+                        };
+                    };
+                });
+                return args;
+            };
+            const args = getArgs();
+            `;
+            writeFileSync(jsFile, getArgs + origin);
+        } catch (err) {
+            this.logger.error('addGetArgs fail');
+            throw err;
+        };
+    };
+
     private async addPackages(cmd: string, scriptPackage: object): Promise<string> {
         try {
             this.logger.debug('addPackages');
-            cmd += ` minimist`;
-            Object.keys(scriptPackage).forEach(key => {
-                if (scriptPackage[key].charAt(0) == '^') {
-                    const packageVersion = scriptPackage[key].slice(1);
-                    cmd += ` ${key}@${packageVersion}`;
-                } else {
-                    const packageVersion = scriptPackage[key];
-                    cmd += ` ${key}@${packageVersion}`;
-                };
-            });
-            return cmd;
+            if (!scriptPackage) {
+                return cmd;
+            } else {
+                Object.keys(scriptPackage).forEach(key => {
+                    if (scriptPackage[key].charAt(0) == '^') {
+                        const packageVersion = scriptPackage[key].slice(1);
+                        cmd += ` ${key}@${packageVersion}`;
+                    } else {
+                        const packageVersion = scriptPackage[key];
+                        cmd += ` ${key}@${packageVersion}`;
+                    };
+                });
+                return cmd;
+            };
         } catch (err) {
             this.logger.error('addPackages fail');
             this.logger.error(err);
@@ -204,10 +246,17 @@ export class ChildJSService {
     private async addArgs(cmd: string, input: object): Promise<string> {
         try {
             this.logger.debug('addArgs');
-            Object.keys(input).forEach(key => {
-                cmd += ` --${key}=${input[key]} `;
-            });
-            return cmd;
+            if (!input) {
+                return cmd;
+            } else {
+                Object.keys(input).forEach((key, index, array) => {
+                    cmd += ` --${key} ${input[key]}`;
+                    if (array[index + 1]) {
+                        cmd += ' ';
+                    };
+                });
+                return cmd;
+            };
         } catch (err) {
             this.logger.error('addArgs fail');
             this.logger.error(err);

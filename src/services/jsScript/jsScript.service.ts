@@ -7,7 +7,7 @@ import { JSScript } from 'src/models/postgres/jsScript/jsScriptModel.entity';
 import { JSScriptModelService } from 'src/models/postgres/jsScript/jsScriptModel.service';
 //dtos
 import { CreateOneJSScriptDto, ReadOneJSScriptByIDDto, UpdateOneJSScriptByIDDto, DeleteOneJSScriptByIDDto } from './jsScript.dto';
-import { ChildJSDto } from 'src/job/childJS/childJS.dto';
+import { ChildJSDto, JSFileDto } from 'src/job/childJS/childJS.dto';
 //services
 import { ChildJSService } from 'src/job/childJS/childJS.service';
 
@@ -30,6 +30,12 @@ export class JSScriptService {
             jsScript.scriptSource = 'api';
             jsScript.scriptVersion = 1;
             const result = await this.jsScriptModel.createOne(jsScript);
+            const { scriptID, scriptVersion } = result;
+            const jsDto: JSFileDto = {
+                scriptID: scriptID,
+                scriptVersion: scriptVersion
+            };
+            await this.childJSService.gernerateJSFile(jsDto);
             return result;
         } catch (err) {
             this.logger.error('createOne fail');
@@ -63,10 +69,17 @@ export class JSScriptService {
         try {
             this.logger.debug('updateOneByID');
             const jsScript = new JSScript();
-            jsScript.scriptName = dto.scriptName;
-            jsScript.scriptContent = dto.scriptContent;
-            jsScript.scriptPackage = dto.scriptPackage;
+            const { scriptID, scriptName, scriptContent, scriptPackage } = dto;
+            jsScript.scriptName = scriptName;
+            jsScript.scriptContent = scriptContent;
+            jsScript.scriptPackage = scriptPackage;
             const result = await this.jsScriptModel.updateOneByScriptID(dto);
+            const target = await this.jsScriptModel.readOneByID(scriptID);
+            const jsDto: JSFileDto = {
+                scriptID: target.scriptID,
+                scriptVersion: target.scriptVersion
+            };
+            await this.childJSService.gernerateJSFile(jsDto);
             return result;
         } catch (err) {
             this.logger.error('updateOneByID fail');

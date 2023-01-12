@@ -1,9 +1,13 @@
 const apiUrl = '/MiddleService/JSScript';
+const formatOption = { indent_size: 2, space_in_empty_paren: true }
 let table;
 let datas = {};
 let state = '';
 let cmScriptDisplay;
+let cmModalContent;
+let cmModalPackage;
 let cmInput;
+let cmOutput;
 
 $(document).ready(function () {
   readAll(); //讀取全部資料
@@ -81,7 +85,8 @@ function tableRowClick() {
     sessionStorage.setItem('account', account);
     const children = Array.from($(this).children());
     children.forEach((element, index) => {
-      sessionStorage.setItem(scriptColumns[index].data, element.innerHTML);
+      const escaped = escapeHtml(element.innerHTML);
+      sessionStorage.setItem(scriptColumns[index].data, escaped);
     });
     $('#edit').addClass('showBtn');
     $('#clone').addClass('showBtn');
@@ -133,6 +138,8 @@ function editCloneInit() {
   $('#scriptName').val(sessionStorage.getItem('scriptName'));
   $('#scriptPackage').val(sessionStorage.getItem('scriptPackage'));
   $('#scriptContent').val(sessionStorage.getItem('scriptContent'));
+  cmModalJson.setValue(sessionStorage.getItem('scriptPackage'));
+  cmModalScript.setValue(sessionStorage.getItem('scriptContent'));
 }
 
 //字串拆分
@@ -154,21 +161,21 @@ function splitStr(str) {
 
 //儲存-判斷欄位是否為空、整理資料、呼API(API-001 || API-002)
 function save() {
+  $('form').addClass('was-validated');
   const scriptName = $('#scriptName').val();
   const scriptPackage = $('#scriptPackage').val();
   const scriptContent = $('#scriptContent').val();
-  console.log(scriptName, scriptPackage, scriptContent);
   const data = {
     scriptName: scriptName,
     scriptContent: scriptContent,
-    scriptPackage: JSON.parse(scriptPackage)
+    scriptPackage: scriptPackage ? JSON.parse(scriptPackage) : null
   };
   if (state == 'new' || state == 'clone') {
     createAPI(data);
   } else if (state == 'edit') {
     updateAPI(data);
   };
-  //初始化
+  初始化
   init();
 }
 //--
@@ -213,24 +220,6 @@ const updateAPI = data => {
 function init() {
   datas = [];
   $('input').val('');
-  $('select[name!="script_length"]').val('');
-  $('select#scriptType').val('regular');
-  $('#regular').removeClass('d-none');
-  $('#cycle').addClass('d-none');
-  const regularRecordChildren = $('#regularRecord').children();
-  for (let i = 0; i < regularRecordChildren.length; i++) {
-    const attrId = regularRecordChildren.eq(i).attr('id');
-    if (attrId != 'regularTemplate') {
-      regularRecordChildren.eq(i).remove();
-    }
-  }
-  const cycleRecordChildren = $('#cycleRecord').children();
-  for (let i = 0; i < cycleRecordChildren.length; i++) {
-    const attrId = cycleRecordChildren.eq(i).attr('id');
-    if (attrId != 'cycleTemplate') {
-      cycleRecordChildren.eq(i).remove();
-    }
-  }
   $('textarea').val('');
   $('form').removeClass('was-validated');
   bootstrap.Modal.getInstance($('#scriptModal')).hide();
@@ -285,27 +274,42 @@ function exportExcel() {
 const codeMirror = () => {
   const scriptArea = document.getElementById('script-area');
   const inputArea = document.getElementById('script-input');
+  const outputArea = document.getElementById('script-output');
+  const modalContent = document.getElementById('modal-content');
+  const modalJson = document.getElementById('scriptPackage');
   cmScriptDisplay = CodeMirror.fromTextArea(scriptArea, {
     mode: 'javascript',
+    json: true,
     lineNumbers: true,
-    pasteLinesPerSelection: true,
-    // lineWrapping: true,
-    lineSeparator: ';',
     readOnly: true,
+    theme: 'material-darker'
+    // pasteLinesPerSelection: true,
+    // lineWrapping: true,
+    // lineSeparator: ';',
   });
-  // cmInput = CodeMirror.fromTextArea(inputArea, {
-  //   mode: 'json'
-  // })
+  cmInput = CodeMirror.fromTextArea(inputArea, {
+    mode: 'javascript',
+    json: true,
+    lineNumbers: true,
+    theme: 'cm-input'
+  });
+  cmOutput = CodeMirror.fromTextArea(outputArea, {
+    mode: 'javascript',
+    json: true,
+    lineNumbers: true,
+    theme: 'cm-input',
+    readOnly: true
+  });
 };
 
 const testJS = () => {
   const scriptID = sessionStorage.getItem('scriptID');
   const scriptVersion = sessionStorage.getItem('scriptVersion');
-  const input = $('#script-input').val();
+  const input = cmInput.getValue();
   const data = {
     scriptID: scriptID,
     scriptVersion: scriptVersion,
-    input: JSON.parse(input)
+    input: input ? JSON.parse(input) : null
   };
 
   $.ajax({
@@ -316,10 +320,20 @@ const testJS = () => {
     success: res => {
       console.log('res', res);
       const response = JSON.stringify(res);
-      $('#script-output').val(response);
+      const output = js_beautify(response, formatOption);
+      cmOutput.setValue(output);
     },
     error: err => {
       console.log('err', err);
     },
   })
+};
+
+const escapeHtml = (htmlString) => {
+  return htmlString.replace(/&lt;/g, "<")
+    .replace(/&gt;/g, ">")
+    .replace(/&quot;/g, "\"")
+    .replace(/&#39;/g, "\'")
+    .replace(/&amp;/g, "&");
+
 };

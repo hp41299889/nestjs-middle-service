@@ -24,6 +24,6 @@ export class JSScript {
     @Column()
     scriptContent: string;
 
-    @Column('json')
+    @Column({ type: 'json', nullable: true })
     scriptPackage: object;
 };
