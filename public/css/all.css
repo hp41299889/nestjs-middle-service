@@ -40,6 +40,10 @@
   min-width: 770px;
 }
 
+.card .script-display .item #js-area .CodeMirror.cm-s-material-darker {
+  height: 354px;
+}
+
 .card .script-display .item #items {
   display: flex;
   flex-wrap: wrap;
@@ -49,15 +53,18 @@
 }
 
 .card .script-display .item #items .js {
-  display: flex;
-  flex-wrap: wrap;
-  flex-direction: column;
+  width: 318px;
+  height: 265px;
 }
 
-.card .script-display .item #items .js .CodeMirror.cm-s-cm-input {
-  width: 300px;
-  height: 120px;
+.card .script-display .item #items .js .CodeMirror.cm-s-rubyblue {
+  height: 230px;
 }
+
+.card .script-display .item #items .js .CodeMirror.cm-s-eclipse {
+  height: 230px;
+}
+
 
 .card .script-display .item .js-test-btn {
   display: flex;

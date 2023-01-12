@@ -291,13 +291,13 @@ const codeMirror = () => {
     mode: 'javascript',
     json: true,
     lineNumbers: true,
-    theme: 'cm-input'
+    theme: 'rubyblue'
   });
   cmOutput = CodeMirror.fromTextArea(outputArea, {
     mode: 'javascript',
     json: true,
     lineNumbers: true,
-    theme: 'cm-input',
+    theme: 'eclipse',
     readOnly: true
   });
 };

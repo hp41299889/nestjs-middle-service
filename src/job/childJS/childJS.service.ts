@@ -31,6 +31,7 @@ export class ChildJSService {
             this.logger.debug('execChildJS');
             const { scriptID, scriptVersion, input } = dto;
             const jsScript = await this.jsScriptModel.readOneByID(scriptID);
+            await this.gernerateJSFile(dto);
             await this.nodeRun(jsScript, scriptVersion, input);
         } catch (err) {
             this.logger.error('execChildJS fail');
