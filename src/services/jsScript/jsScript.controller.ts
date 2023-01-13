@@ -47,6 +47,7 @@ export class JSScriptController {
     async createOne(@Res() res: Response, @Body() dto: CreateOneJSScriptDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/create');
+            dto.scriptSource = 'api';
             const result = await this.jsScriptService.createOne(dto);
             this.httpResponseService.success(res, 201, result);
         } catch (err) {

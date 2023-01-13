@@ -3,11 +3,11 @@ const formatOption = { indent_size: 2, space_in_empty_paren: true }
 let table;
 let datas = {};
 let state = '';
-let cmScriptDisplay;
-let cmModalContent;
-let cmModalPackage;
-let cmInput;
-let cmOutput;
+let modalScript;
+let modalJson;
+let scriptDisplay;
+let scriptInput;
+let scriptOutput;
 
 $(document).ready(function () {
   readAll(); //讀取全部資料
@@ -38,7 +38,7 @@ $(document).ready(function () {
   tableRowClick(); //點擊列觸發反藍、按鈕顯示、sessionStoraget儲存
   modalTitle(); //動態 modal title
   fillInDelModal(); //刪除Modal開啟時自動帶入資料
-  codeMirror();
+  aceInit();
 });
 
 //讀取全部資料(API-005)
@@ -55,13 +55,10 @@ function readAll() {
       } else {
         const { data } = result;
         data.map(item => {
-          item.scriptPackage = JSON.stringify(item.scriptPackage);
+          item.scriptPackage = item.scriptPackage ? JSON.stringify(item.scriptPackage) : null;
         });
         table.rows.add(data).draw();
       };
-
-      //將資料新增到table上
-      table.rows.add(response).draw();
     },
     error: function (xhr) {
       console.log('xhr =', xhr);
@@ -85,14 +82,15 @@ function tableRowClick() {
     sessionStorage.setItem('account', account);
     const children = Array.from($(this).children());
     children.forEach((element, index) => {
-      const escaped = escapeHtml(element.innerHTML);
-      sessionStorage.setItem(scriptColumns[index].data, escaped);
+      //特殊字元
+      // const escaped = escapeHtml(element.innerHTML);
+      sessionStorage.setItem(scriptColumns[index].data, element.textContent);
     });
     $('#edit').addClass('showBtn');
     $('#clone').addClass('showBtn');
     $('#delete').addClass('showBtn');
-    $('#script-area').val(sessionStorage.getItem('scriptContent'));
-    cmScriptDisplay.setValue(sessionStorage.getItem('scriptContent'));
+    scriptDisplay.setValue(js_beautify(sessionStorage.getItem('scriptContent'), formatOption));
+    scriptDisplay.clearSelection();
   });
 }
 //--
@@ -101,7 +99,8 @@ function tableRowClick() {
 function modalTitle() {
   const scriptModal = document.getElementById('scriptModal');
 
-  scriptModal.addEventListener('show.bs.modal', (event) => {
+  scriptModal.addEventListener('shown.bs.modal', async (event) => {
+    init();
     console.log('showmodal');
     // Button that triggered the modal
     const button = event.relatedTarget;
@@ -111,9 +110,6 @@ function modalTitle() {
     // and then do the updating in a callback.
     //
     // Update the modal's content.
-    const modalTitle = scriptModal.querySelector('.modal-title');
-
-    modalTitle.textContent = `${scriptModalLabel}表單`;
 
     //打開的表單類別
     const scriptModalWhatever = button.getAttribute('data-bs-whatever');
@@ -129,17 +125,21 @@ function modalTitle() {
       //new or other
       console.log('new or other true');
     }
+
+    const modalTitle = scriptModal.querySelector('.modal-title');
+
+    modalTitle.textContent = `${scriptModalLabel}表單`;
   });
 }
-//--
 
+//--
 //edit & clone init
-function editCloneInit() {
+async function editCloneInit() {
   $('#scriptName').val(sessionStorage.getItem('scriptName'));
-  $('#scriptPackage').val(sessionStorage.getItem('scriptPackage'));
-  $('#scriptContent').val(sessionStorage.getItem('scriptContent'));
-  cmModalJson.setValue(sessionStorage.getItem('scriptPackage'));
-  cmModalScript.setValue(sessionStorage.getItem('scriptContent'));
+  modalJson.setValue(js_beautify(sessionStorage.getItem('scriptPackage'), formatOption));
+  modalScript.setValue(js_beautify(sessionStorage.getItem('scriptContent'), formatOption));
+  modalJson.clearSelection();
+  modalScript.clearSelection();
 }
 
 //字串拆分
@@ -163,8 +163,8 @@ function splitStr(str) {
 function save() {
   $('form').addClass('was-validated');
   const scriptName = $('#scriptName').val();
-  const scriptPackage = $('#scriptPackage').val();
-  const scriptContent = $('#scriptContent').val();
+  const scriptPackage = modalJson.getValue();
+  const scriptContent = modalScript.getValue();
   const data = {
     scriptName: scriptName,
     scriptContent: scriptContent,
@@ -175,8 +175,9 @@ function save() {
   } else if (state == 'edit') {
     updateAPI(data);
   };
-  初始化
+  // //初始化
   init();
+  bootstrap.Modal.getInstance($('#scriptModal')).hide();
 }
 //--
 
@@ -207,7 +208,7 @@ const updateAPI = data => {
     dataType: 'json',
     success: function (response) {
       console.log(response);
-      location.reload();
+      // location.reload();
     },
     error: function (xhr) {
       console.log('xhr =', xhr);
@@ -219,10 +220,10 @@ const updateAPI = data => {
 //初始化
 function init() {
   datas = [];
-  $('input').val('');
-  $('textarea').val('');
   $('form').removeClass('was-validated');
-  bootstrap.Modal.getInstance($('#scriptModal')).hide();
+  $('#scriptName').val('');
+  modalJson.setValue('');
+  modalScript.setValue('');
 }
 //--
 
@@ -231,7 +232,7 @@ function fillInDelModal() {
   const deleteModal = document.getElementById('deleteModal');
   // console.log('deleteModal =', deleteModal);
 
-  deleteModal.addEventListener('show.bs.modal', (event) => {
+  deleteModal.addEventListener('shown.bs.modal', (event) => {
     console.log('delete');
     $('#scriptIdDel').val(sessionStorage.getItem('scriptID'));
     $('#scriptNameDel').val(sessionStorage.getItem('scriptName'));
@@ -270,42 +271,50 @@ function exportExcel() {
   $('button.buttons-excel').trigger('click');
 }
 
-//code mirror
-const codeMirror = () => {
-  const scriptArea = document.getElementById('script-area');
-  const inputArea = document.getElementById('script-input');
-  const outputArea = document.getElementById('script-output');
-  const modalContent = document.getElementById('modal-content');
-  const modalJson = document.getElementById('scriptPackage');
-  cmScriptDisplay = CodeMirror.fromTextArea(scriptArea, {
-    mode: 'javascript',
-    json: true,
-    lineNumbers: true,
-    readOnly: true,
-    theme: 'material-darker'
-    // pasteLinesPerSelection: true,
-    // lineWrapping: true,
-    // lineSeparator: ';',
+const aceInit = () => {
+  modalScript = ace.edit('modal-script');
+  modalJson = ace.edit('modal-json');
+  scriptDisplay = ace.edit('script-display');
+  scriptInput = ace.edit('script-input');
+  scriptOutput = ace.edit('script-output');
+  modalScript.setOptions({
+    mode: 'ace/mode/javascript',
+    theme: 'ace/theme/eclipse',
+    useWorker: false,
+    fontSize: '16px'
   });
-  cmInput = CodeMirror.fromTextArea(inputArea, {
-    mode: 'javascript',
-    json: true,
-    lineNumbers: true,
-    theme: 'rubyblue'
+  modalJson.setOptions({
+    mode: 'ace/mode/json',
+    theme: 'ace/theme/eclipse',
+    useWorker: false,
+    fontSize: '16px'
   });
-  cmOutput = CodeMirror.fromTextArea(outputArea, {
-    mode: 'javascript',
-    json: true,
-    lineNumbers: true,
-    theme: 'eclipse',
+  scriptDisplay.setOptions({
+    mode: 'ace/mode/javascript',
+    theme: 'ace/theme/twilight',
+    useWorker: false,
+    fontSize: '16px',
     readOnly: true
+  });
+  scriptInput.setOptions({
+    mode: 'ace/mode/json',
+    theme: 'ace/theme/eclipse',
+    useWorker: false,
+    fontSize: '16px'
+  });
+  scriptOutput.setOptions({
+    mode: 'ace/mode/json',
+    theme: 'ace/theme/eclipse',
+    useWorker: false,
+    fontSize: '16px',
+    readOnly: true,
   });
 };
 
 const testJS = () => {
   const scriptID = sessionStorage.getItem('scriptID');
   const scriptVersion = sessionStorage.getItem('scriptVersion');
-  const input = cmInput.getValue();
+  const input = scriptInput.getValue();
   const data = {
     scriptID: scriptID,
     scriptVersion: scriptVersion,
@@ -321,19 +330,11 @@ const testJS = () => {
       console.log('res', res);
       const response = JSON.stringify(res);
       const output = js_beautify(response, formatOption);
-      cmOutput.setValue(output);
+      scriptOutput.setValue(output);
+      scriptOutput.clearSelection();
     },
     error: err => {
       console.log('err', err);
     },
   })
-};
-
-const escapeHtml = (htmlString) => {
-  return htmlString.replace(/&lt;/g, "<")
-    .replace(/&gt;/g, ">")
-    .replace(/&quot;/g, "\"")
-    .replace(/&#39;/g, "\'")
-    .replace(/&amp;/g, "&");
-
 };

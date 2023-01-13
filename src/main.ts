@@ -65,7 +65,7 @@ const registerMicroServices = async (app: NestExpressApplication) => {
       }
     }
   });
-  await app.startAllMicroservices();
+  // await app.startAllMicroservices();
 };
 
 bootstrap();

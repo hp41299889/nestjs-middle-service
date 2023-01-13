@@ -6,36 +6,29 @@ import { DeleteResult, UpdateResult } from 'typeorm';
 import { JSScript } from 'src/models/postgres/jsScript/jsScriptModel.entity';
 import { JSScriptModelService } from 'src/models/postgres/jsScript/jsScriptModel.service';
 //dtos
-import { CreateOneJSScriptDto, ReadOneJSScriptByIDDto, UpdateOneJSScriptByIDDto, DeleteOneJSScriptByIDDto } from './jsScript.dto';
-import { ChildJSDto, JSFileDto } from 'src/job/childJS/childJS.dto';
+import { CreateOneJSScriptDto, ReadOneJSScriptByIDDto, UpdateOneJSScriptByIDDto, DeleteOneJSScriptByIDDto, PreDto } from './jsScript.dto';
+import { ChildJSDto } from 'src/job/childJS/childJS.dto';
 //services
 import { ChildJSService } from 'src/job/childJS/childJS.service';
+import { CommonService } from 'src/utils/common/common.service';
 
 @Injectable()
 export class JSScriptService {
     constructor(
         private readonly jsScriptModel: JSScriptModelService,
-        private readonly childJSService: ChildJSService
+        private readonly childJSService: ChildJSService,
+        private readonly commonService: CommonService
     ) { };
 
     private readonly logger = new Logger(JSScriptService.name);
 
+
     async createOne(dto: CreateOneJSScriptDto): Promise<JSScript> {
         try {
             this.logger.debug('createOne');
-            const jsScript = new JSScript();
-            jsScript.scriptName = dto.scriptName;
-            jsScript.scriptContent = dto.scriptContent;
-            jsScript.scriptPackage = dto.scriptPackage;
-            jsScript.scriptSource = 'api';
-            jsScript.scriptVersion = 1;
-            const result = await this.jsScriptModel.createOne(jsScript);
-            const { scriptID, scriptVersion } = result;
-            const jsDto: JSFileDto = {
-                scriptID: scriptID,
-                scriptVersion: scriptVersion
-            };
-            await this.childJSService.gernerateJSFile(jsDto);
+            await this.preClean(dto);
+            const result = await this.jsScriptModel.createOne(dto);
+            await this.childJSService.gernerateJSFile(result);
             return result;
         } catch (err) {
             this.logger.error('createOne fail');
@@ -68,18 +61,11 @@ export class JSScriptService {
     async updateOneByID(dto: UpdateOneJSScriptByIDDto): Promise<UpdateResult> {
         try {
             this.logger.debug('updateOneByID');
-            const jsScript = new JSScript();
-            const { scriptID, scriptName, scriptContent, scriptPackage } = dto;
-            jsScript.scriptName = scriptName;
-            jsScript.scriptContent = scriptContent;
-            jsScript.scriptPackage = scriptPackage;
+            await this.preClean(dto);
+            const { scriptID } = dto;
             const result = await this.jsScriptModel.updateOneByScriptID(dto);
             const target = await this.jsScriptModel.readOneByID(scriptID);
-            const jsDto: JSFileDto = {
-                scriptID: target.scriptID,
-                scriptVersion: target.scriptVersion
-            };
-            await this.childJSService.gernerateJSFile(jsDto);
+            await this.childJSService.gernerateJSFile(target);
             return result;
         } catch (err) {
             this.logger.error('updateOneByID fail');
@@ -104,6 +90,15 @@ export class JSScriptService {
             await this.childJSService.execChildJS(dto);
         } catch (err) {
             this.logger.error('test fail');
+            throw err;
+        };
+    };
+
+    private async preClean(dto: PreDto): Promise<void> {
+        try {
+            dto.scriptContent = await this.commonService.uglifyContent(dto.scriptContent);
+            dto.scriptPackage = dto.scriptPackage ? dto.scriptPackage : null;
+        } catch (err) {
             throw err;
         };
     };

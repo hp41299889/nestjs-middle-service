@@ -6,7 +6,7 @@ import { Repository, UpdateResult, DeleteResult } from 'typeorm';
 //models
 import { JSScript } from './jsScriptModel.entity';
 //dtos
-import { UpdateOneJSScriptByIDDto } from 'src/services/jsScript/jsScript.dto';
+import { CreateOneJSScriptDto, UpdateOneJSScriptByIDDto } from 'src/services/jsScript/jsScript.dto';
 
 @Injectable()
 export class JSScriptModelService {
@@ -17,9 +17,16 @@ export class JSScriptModelService {
 
     private readonly logger = new Logger(JSScriptModelService.name);
 
-    async createOne(jsScript: JSScript): Promise<JSScript> {
+    async createOne(dto: CreateOneJSScriptDto): Promise<JSScript> {
         try {
             this.logger.debug('createAJSScript');
+            const { scriptName, scriptContent, scriptPackage, scriptSource } = dto;
+            const jsScript = new JSScript();
+            jsScript.scriptName = scriptName;
+            jsScript.scriptContent = scriptContent;
+            jsScript.scriptPackage = scriptPackage;
+            jsScript.scriptSource = scriptSource;
+            jsScript.scriptVersion = 1;
             return await this.jsScriptRepo.save(jsScript);
         } catch (err) {
             this.logger.error('createAJSScript fail');

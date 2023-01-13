@@ -212,3 +212,35 @@
 }
 
 /*# sourceMappingURL=all.css.map */
+
+/* ace editor */
+#script-display {
+  position: relative;
+  width: 750px;
+  height: 370px;
+}
+
+#script-input {
+  position: relative;
+  width: 320px;
+  height: 200px;
+}
+
+#script-output {
+  position: relative;
+  width: 320px;
+  height: 200px;
+}
+
+#modal-script {
+  font-size: 16px;
+  position: relative;
+  width: 470px;
+  height: 250px;
+}
+
+#modal-json {
+  position: relative;
+  width: 470px;
+  height: 250px;
+}

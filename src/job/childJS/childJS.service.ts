@@ -3,6 +3,8 @@ import { Injectable, Logger } from '@nestjs/common';
 import { join } from 'path';
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
 
+//consts
+import * as consts from './child.constant';
 //models
 import { JSScript } from 'src/models/postgres/jsScript/jsScriptModel.entity';
 import { CreateJSExecutionLogDto } from 'src/models/mongo/js-execution-log/jsExecutionLogModel.dto';
@@ -12,6 +14,11 @@ import { JSExecutionLogModelService } from 'src/models/mongo/js-execution-log/js
 import { ChildJSDto, JSFileDto } from './childJS.dto';
 //services
 import { ChildService } from '../child/child.service';
+import { CommonService } from 'src/utils/common/common.service';
+
+const {
+    GET_ARGS_CONTENT
+} = consts;
 
 @Injectable()
 export class ChildJSService {
@@ -19,6 +26,7 @@ export class ChildJSService {
         private readonly childService: ChildService,
         private readonly jsScriptModel: JSScriptModelService,
         private readonly jsExecutionLogModel: JSExecutionLogModelService,
+        private readonly commonService: CommonService
     ) { };
 
     private readonly logger = new Logger(ChildJSService.name);
@@ -130,26 +138,8 @@ export class ChildJSService {
         try {
             this.logger.debug('addGetArgs');
             const origin = readFileSync(jsFile);
-            const getArgs = `
-            const getArgs = () => {
-                const args = {};
-                let key;
-                process.argv.slice(2).forEach((arg, index, array) => {
-                    if (arg.startsWith('--')) {
-                        key = arg.slice(2);
-                        args[key] = '';
-                    } else {
-                        args[key] += arg;
-                        if (array[index + 1] && !array[index + 1].startsWith('--')) {
-                            args[key] += ' ';
-                        };
-                    };
-                });
-                return args;
-            };
-            const args = getArgs();
-            `;
-            writeFileSync(jsFile, getArgs + origin);
+            const getArgs = GET_ARGS_CONTENT;
+            writeFileSync(jsFile, await this.commonService.uglifyContent(getArgs + origin));
         } catch (err) {
             this.logger.error('addGetArgs fail');
             throw err;

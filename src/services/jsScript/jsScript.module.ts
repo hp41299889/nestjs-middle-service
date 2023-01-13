@@ -6,6 +6,7 @@ import { JSScriptModelModule } from 'src/models/postgres/jsScript/jsScriptModel.
 //modules
 import { HttpResponseModule } from 'src/utils/httpResponse/httpResponse.module';
 import { ChildJSModule } from 'src/job/childJS/childJS.module';
+import { CommonModule } from 'src/utils/common/common.module';
 //controllers
 import { JSScriptController } from './jsScript.controller';
 //services
@@ -15,7 +16,8 @@ import { JSScriptService } from './jsScript.service';
   imports: [
     HttpResponseModule,
     JSScriptModelModule,
-    ChildJSModule
+    ChildJSModule,
+    CommonModule
   ],
   providers: [JSScriptService],
   controllers: [JSScriptController]

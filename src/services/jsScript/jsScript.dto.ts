@@ -14,6 +14,7 @@ export class CreateOneJSScriptDto {
     scriptName: string;
     scriptContent: string;
     scriptPackage?: object;
+    scriptSource?: string;
 };
 
 export class UpdateOneJSScriptByIDDto {
@@ -29,4 +30,11 @@ export class ReadOneJSScriptByIDDto {
 
 export class DeleteOneJSScriptByIDDto extends ReadOneJSScriptByIDDto {
 
+};
+
+export class PreDto {
+    scriptID?: number;
+    scriptName?: string;
+    scriptContent?: string;
+    scriptPackage?: object;
 };

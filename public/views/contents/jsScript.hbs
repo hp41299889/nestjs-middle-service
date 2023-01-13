@@ -3,21 +3,18 @@
 <link rel='stylesheet' href='/js/modules/dataTables/datatables.css' />
 <link rel='stylesheet' href='/js/modules/dataTables/Buttons-2.3.3/css/buttons.dataTables.min.css' />
 <link rel='stylesheet' href='/js/modules/dataTables/DataTables-1.13.1/css/dataTables.bootstrap5.min.css' />
-<link rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.css' />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/material-darker.min.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/rubyblue.min.css" />
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/theme/eclipse.min.css" />
 <script src='/js/modules/dataTables/datatables.js'></script>
 <script src='/js/modules/dataTables/JSZip-2.5.0/jszip.min.js'></script>
 <script src='/js/modules/dataTables/Buttons-2.3.3/js/dataTables.buttons.min.js'></script>
 <script src='/js/modules/dataTables/Buttons-2.3.3/js/buttons.html5.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/codemirror.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/mode/javascript/javascript.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/lint/javascript-lint.min.js'></script>
-<script src='https://cdnjs.cloudflare.com/ajax/libs/codemirror/6.65.7/addon/lint/json-lint.min.js'></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-css.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/js-beautify/1.14.7/beautify-html.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/ace.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/theme-eclipse.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/theme-twilight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/mode-javascript.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.14.0/mode-json.min.js"></script>
 <div class='m-4'>
   <h1>JS腳本</h1>
   <div class='cards'>
@@ -49,21 +46,25 @@
         <div class='item'>
           <div id="js-area" class='card'>
             <span class="title">JavaScript</span>
-            <textarea id="script-area" disabled="disabled"></textarea>
+            {{!-- <div id="editor" disabled="disabled"></div> --}}
+            <div id="script-display"></div>
           </div>
         </div>
         <div class="item">
           <div id="items">
             <div class="js">
               <span>輸入:</span>
-              <textarea id='script-input' class="script" placeholder="JavaScript"></textarea>
+              {{!-- <textarea id='script-input' class="script" placeholder="JavaScript"></textarea> --}}
+              <div id="script-input"></div>
             </div>
             <div class="js-test-btn">
               <button class="btn btn-outline-primary" onclick="testJS()">JS腳本測試</button>
             </div>
             <div class="js">
               <span>輸出:</span>
-              <textarea id='script-output' class="script" placeholder="JavaScript" disabled="disabled"></textarea>
+              {{!-- <textarea id='script-output' class="script" placeholder="JavaScript" disabled="disabled"></textarea>
+              --}}
+              <div id="script-output"></div>
             </div>
           </div>
         </div>
@@ -91,7 +92,8 @@
             </div>
             <div class='mb-3'>
               <label for='scriptPackage' class='col-form-label fw-bolder'>腳本相依套件:JSON</label>
-              <textarea class='form-control' id='scriptPackage' placeholder='Text Area' required></textarea>
+              {{!-- <textarea class='form-control' id='scriptPackage' placeholder='Text Area' required></textarea> --}}
+              <div id="modal-json"></div>
               <div class='invalid-feedback'>
                 尚未選擇
               </div>
@@ -99,7 +101,8 @@
           </div>
           <div class='mb-3'>
             <label for='scriptContent' class='col-form-label fw-bolder'>腳本內容:JavaScript程式碼</label>
-            <textarea class='form-control' id='scriptContent' placeholder='Text Area' required></textarea>
+            {{!-- <textarea class='form-control' id='scriptContent' placeholder='Text Area' required></textarea> --}}
+            <div id="modal-script"></div>
             <div class='invalid-feedback'>
               不可為空
             </div>

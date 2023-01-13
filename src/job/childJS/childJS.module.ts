@@ -6,6 +6,7 @@ import { JSExecutionLogModelModule } from 'src/models/mongo/js-execution-log/jsE
 import { JSScriptModelModule } from 'src/models/postgres/jsScript/jsScriptModel.module';
 //modules
 import { ChildModule } from '../child/child.module';
+import { CommonModule } from 'src/utils/common/common.module';
 //services
 import { ChildJSService } from './childJS.service';
 
@@ -14,6 +15,7 @@ import { ChildJSService } from './childJS.service';
         ChildModule,
         JSScriptModelModule,
         JSExecutionLogModelModule,
+        CommonModule
     ],
     providers: [ChildJSService],
     exports: [ChildJSService]
