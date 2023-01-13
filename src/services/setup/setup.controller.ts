@@ -3,7 +3,7 @@ import { Controller, Logger, Get, Res, Post, Body, Session, Patch, Req } from '@
 import { Request, Response } from 'express';
 
 //configs
-import setupConfig from './setup.config';
+import { setupControllerConfig } from 'src/basics/configs/config';
 //dtos
 import { DBConnectionDto, SetupSaveDto } from './setup.dto';
 //services
@@ -11,13 +11,13 @@ import { SetupService } from './setup.service';
 import { HttpResponseService } from 'src/utils/httpResponse/httpResponse.service';
 
 const {
-    prefix,
-    viewRoute,
-    readRoute,
-    postgresConnectTestRoute,
-    mongoConnectTestRoute,
-    saveRoute
-} = setupConfig;
+    prefix,                     //Setup
+    viewRoute,                  //view
+    readRoute,                  //read
+    postgresConnectTestRoute,   //postgreConnectTest
+    mongoConnectTestRoute,      //mongoConnectTest
+    saveRoute,                  //save
+} = setupControllerConfig;
 
 
 @Controller(prefix)

@@ -1,12 +1,13 @@
 //packages
 import { NestFactory, } from '@nestjs/core';
 import { MicroserviceOptions, Transport } from '@nestjs/microservices';
-import { ConfigService } from '@nestjs/config';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import { join } from 'path';
 import * as session from 'express-session';
 import * as hbs from 'hbs';
 
+//configs
+import { appConfig } from './basics/configs/config';
 //modules
 import { AppModule } from './app.module';
 //dtos
@@ -17,11 +18,8 @@ import { SetupJsonService } from './utils/setupJson/setupJson.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
-  const configService: ConfigService = app.get(ConfigService);
-  const appConfig: AppConfigDto = configService.get('app');
-  const { name, port, prefix } = appConfig;
-
-  await registerApplications(app, appConfig);
+  const { name, prefix, port } = appConfig;
+  registerApplications(app, appConfig);
   await registerMicroServices(app);
 
   app.setGlobalPrefix(prefix);

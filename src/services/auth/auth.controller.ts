@@ -3,19 +3,21 @@ import { Controller, Logger, Post, Get, Req, Res, Body, Session } from '@nestjs/
 import { Request, Response } from 'express';
 
 //configs
-import authConfig from './auth.config';
+import { authControllerConfig } from 'src/basics/configs/config';
 //dtos
 import { LoginDto } from '../setup/setup.dto';
 //services
 import { AuthService } from './auth.service';
 import { HttpResponseService } from 'src/utils/httpResponse/httpResponse.service';
 
+
+
 const {
-    prefix,
-    viewRoute,
-    loginRoute,
-    logoutRoute
-} = authConfig;
+    prefix,     //Auth
+    viewRoute,  //view
+    loginRoute, //login
+    logoutRoute,//logout
+} = authControllerConfig;
 
 @Controller(prefix)
 export class AuthController {

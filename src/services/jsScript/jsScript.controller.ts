@@ -3,7 +3,7 @@ import { Controller, Logger, Post, Get, Patch, Delete, Body, Res, Session } from
 import { Response } from 'express';
 
 //configs
-import jsScriptConfig from './jsScript.config';
+import { jsScriptControllerConfig } from 'src/basics/configs/config';
 //dtos
 import { CreateOneJSScriptDto, DeleteOneJSScriptByIDDto, ReadOneJSScriptByIDDto, UpdateOneJSScriptByIDDto } from './jsScript.dto';
 import { ChildJSDto } from 'src/job/childJS/childJS.dto';
@@ -12,15 +12,15 @@ import { JSScriptService } from './jsScript.service';
 import { HttpResponseService } from 'src/utils/httpResponse/httpResponse.service';
 
 const {
-    prefix,
-    viewRoute,
-    createRoute,
-    readAllRoute,
-    queryRoute,
-    updateRoute,
-    deleteRoute,
-    testRoute
-} = jsScriptConfig;
+    prefix,         //JSScript
+    viewRoute,      //view
+    createRoute,    //create
+    readAllRoute,   //readAll
+    queryRoute,     //query
+    updateRoute,    //update
+    deleteRoute,    //delete
+    testRoute,      //test
+} = jsScriptControllerConfig;
 
 @Controller(prefix)
 export class JSScriptController {

@@ -3,7 +3,7 @@ import { Controller, Logger, Post, Res, Body, Get, Session } from '@nestjs/commo
 import { Response } from 'express';
 
 //configs
-import jsExecutionLogConfig from './jsExecutionLog.config';
+import { jSExecutionLogControllerConfig } from 'src/basics/configs/config';
 //dtos
 import { QueryJSExecutionLogDto } from './jsExecutionLog.dto';
 //services
@@ -11,10 +11,10 @@ import { JSExecutionLogService } from './jsExecutionLog.service';
 import { HttpResponseService } from 'src/utils/httpResponse/httpResponse.service';
 
 const {
-    prefix,
-    viewRoute,
-    queryRoute
-} = jsExecutionLogConfig;
+    prefix,     //JSExecutionLog
+    viewRoute,  //view
+    queryRoute, //query
+} = jSExecutionLogControllerConfig;
 
 @Controller(prefix)
 export class JSExecutionLogController {
