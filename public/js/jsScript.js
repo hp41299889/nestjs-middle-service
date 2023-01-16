@@ -71,12 +71,6 @@ function readAll() {
 //點擊列觸發反藍和按鈕顯示、sessionStoraget儲存
 function tableRowClick() {
   $('#script tbody').on('click', 'tr', function () {
-    if ($(this).hasClass('selected')) {
-      $(this).removeClass('selected');
-    } else {
-      table.$('tr.selected').removeClass('selected');
-      $(this).addClass('selected');
-    }
     const account = sessionStorage.getItem('account');
     sessionStorage.clear();
     sessionStorage.setItem('account', account);
@@ -86,11 +80,20 @@ function tableRowClick() {
       // const escaped = escapeHtml(element.innerHTML);
       sessionStorage.setItem(scriptColumns[index].data, element.textContent);
     });
-    $('#edit').addClass('showBtn');
-    $('#clone').addClass('showBtn');
-    $('#delete').addClass('showBtn');
-    scriptDisplay.setValue(js_beautify(sessionStorage.getItem('scriptContent'), formatOption));
-    scriptDisplay.clearSelection();
+    if ($(this).hasClass('selected')) {
+      $(this).removeClass('selected');
+      scriptDisplay.setValue('');
+      $('#edit').removeClass('showBtn');
+      $('#clone').removeClass('showBtn');
+      $('#delete').removeClass('showBtn');
+    } else {
+      table.$('tr.selected').removeClass('selected');
+      $(this).addClass('selected');
+      $('#edit').addClass('showBtn');
+      $('#clone').addClass('showBtn');
+      $('#delete').addClass('showBtn');
+      queryAPI(sessionStorage.getItem('scriptID'));
+    }
   });
 }
 //--
@@ -215,6 +218,23 @@ const updateAPI = data => {
       alert('Error: ' + xhr.status + ' ' + xhr.statusText);
     },
   });
+};
+
+const queryAPI = data => {
+  $.ajax({
+    url: `${apiUrl}/query/`,
+    type: 'POST',
+    data: { scriptID: data },
+    dataType: 'json',
+    success: res => {
+      console.log(res);
+      scriptDisplay.setValue(js_beautify(sessionStorage.getItem('scriptContent'), formatOption));
+      scriptDisplay.clearSelection();
+    },
+    error: err => {
+      console.log(err);
+    }
+  })
 };
 
 //初始化

@@ -70,7 +70,7 @@ export class JSScriptController {
         };
     };
 
-    @Get(queryRoute)
+    @Post(queryRoute)
     async readOneByID(@Res() res: Response, @Body() dto: ReadOneJSScriptByIDDto): Promise<void> {
         try {
             this.logger.debug('/JSScript/readOneByID');

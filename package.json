@@ -1,6 +1,6 @@
 {
   "name": "middle-service",
-  "version": "0.10.6",
+  "version": "0.10.7",
   "description": "",
   "author": "Danny",
   "private": true,
@@ -15,15 +15,17 @@
     "start:debug": "nest start --debug --watch",
     "start:prod": "node dist/main",
     "start:nodemon": "npm run prestart && nodemon dist/main",
-    "build:docker": "npm run build && docker build -t middle-service .",
-    "docker:tag": "docker tag middle-service lightningpg01/ba220802:middle-service",
+    "build:docker": "npm run build && docker build -t middle-service:latest .",
+    "docker:tag": "docker tag middle-service:latest lightningpg01/ba220802:middle-service",
     "docker:push": "npm run build:docker && npm run docker:tag && docker push lightningpg01/ba220802:middle-service",
+    "docker:pull:linux": "sudo docker pull lightningpg01/ba220802:middle-service",
+    "deploy:docker-compose:linux": "npm run docker:pull:linux && sudo docker-compose up -d",
     "lint": "eslint \"{src,apps,libs,test}/**/*.ts\" --fix",
     "test": "jest",
     "test:watch": "jest --watch",
     "test:cov": "jest --coverage",
     "test:debug": "node --inspect-brk -r tsconfig-paths/register -r ts-node/register node_modules/.bin/jest --runInBand",
-    "test:e2e": "jest --config ./test/jest-e2e.json"
+    "tet:e2e": "jest --config ./test/jest-e2e.json"
   },
   "dependencies": {
     "@nestjs/common": "^9.0.0",
@@ -46,6 +48,7 @@
     "npm": "^9.3.0",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
+    "rimraf": "^4.0.7",
     "rxjs": "^7.2.0",
     "typeorm": "^0.3.11",
     "uglify-js": "^3.17.4"

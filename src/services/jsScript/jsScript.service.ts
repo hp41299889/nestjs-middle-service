@@ -28,8 +28,7 @@ export class JSScriptService {
             this.logger.debug('createOne');
             await this.preClean(dto);
             const result = await this.jsScriptModel.createOne(dto);
-            this.logger.log(result);
-            // await this.childJSService.gernerateJSFile(result);
+            await this.childJSService.gernerateJSFile(result);
             return result;
         } catch (err) {
             this.logger.error('createOne fail');

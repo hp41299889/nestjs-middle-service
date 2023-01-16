@@ -34,7 +34,6 @@ export class JSExecutionLogModelService {
         try {
             this.logger.debug('findAll');
             const docs = await this.jsExecutionLogModel.find().exec();
-            this.logger.debug(docs);
             return docs;
         } catch (err) {
             this.logger.error('findAll fail');
@@ -53,7 +52,6 @@ export class JSExecutionLogModelService {
             docs.map(doc => {
                 doc.logID = JSON.stringify(doc._id);
             });
-            this.logger.warn(docs);
             return docs;
         } catch (err) {
             this.logger.error('findTimePeriod fail');

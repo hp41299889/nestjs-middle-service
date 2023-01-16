@@ -3,9 +3,9 @@
   "bossQueue": {
     "IP": "192.168.36.51",
     "port": "5672",
-    "account": "root",
-    "password": "a3345678",
-    "inputQueueName": "job_queue_output",
+    "account": "dannylu",
+    "password": "roxy1029",
+    "inputQueueName": "job_queue_output_test",
     "outputQueueName": "middle_service_output"
   },
   "jobQueue": {
@@ -18,7 +18,7 @@
   },
   "admin": {
     "account": "a",
-    "password": "as"
+    "password": "a"
   },
   "postgreSQL": {
     "IP": "192.168.36.51",
