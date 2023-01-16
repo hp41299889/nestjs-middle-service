@@ -208,7 +208,7 @@ const updateAPI = data => {
     dataType: 'json',
     success: function (response) {
       console.log(response);
-      // location.reload();
+      location.reload();
     },
     error: function (xhr) {
       console.log('xhr =', xhr);

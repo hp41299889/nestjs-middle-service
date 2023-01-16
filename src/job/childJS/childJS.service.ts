@@ -2,6 +2,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { join } from 'path';
 import { writeFileSync, existsSync, mkdirSync, readFileSync } from 'fs';
+import { ChildProcess } from 'child_process';
 
 //consts
 import * as consts from './child.constant';
@@ -39,7 +40,6 @@ export class ChildJSService {
             this.logger.debug('execChildJS');
             const { scriptID, scriptVersion, input } = dto;
             const jsScript = await this.jsScriptModel.readOneByID(scriptID);
-            await this.gernerateJSFile(dto);
             await this.nodeRun(jsScript, scriptVersion, input);
         } catch (err) {
             this.logger.error('execChildJS fail');
@@ -56,8 +56,8 @@ export class ChildJSService {
             const cwd = join(this.jsFileDir, scriptName, scriptVersion.toString());
             const jsFile = join(cwd, `${scriptName}.js`);
             await this.createJSFile(jsScript, jsFile);
-            await this.npmInit(cwd);
-            await this.npmInstall(cwd, scriptPackage);
+            const initChild = await this.npmInit(cwd);
+            await this.npmInstall(initChild, cwd, scriptPackage);
             await this.addGetArgs(jsFile);
         } catch (err) {
             this.logger.error('gernerateJSFile fail');
@@ -107,13 +107,13 @@ export class ChildJSService {
         };
     };
 
-    private async npmInit(cwd: string): Promise<void> {
+    private async npmInit(cwd: string): Promise<ChildProcess> {
         try {
             const packageJsonDir = join(cwd, 'package.json');
             if (!existsSync(packageJsonDir)) {
                 this.logger.debug('npmInit');
                 const cmd = 'npm init -y';
-                await this.childService.execChild(cmd, cwd);
+                return await this.childService.execChild(cmd, cwd);
             };
         } catch (err) {
             this.logger.error('npmInit fail');
@@ -121,13 +121,14 @@ export class ChildJSService {
         };
     };
 
-    private async npmInstall(cwd: string, scriptPackage: object): Promise<void> {
+    private async npmInstall(child: ChildProcess, cwd: string, scriptPackage: object): Promise<void> {
         try {
             this.logger.debug('npmInstall');
-            const cmd = 'npm install';
-            const cmdPackages = await this.addPackages(cmd, scriptPackage);
-            this.logger.debug(cmdPackages);
-            await this.childService.execChild(cmdPackages, cwd);
+            child.stdout.on('data', async () => {
+                const cmd = 'npm install';
+                const cmdPackages = await this.addPackages(cmd, scriptPackage);
+                await this.childService.execChild(cmdPackages, cwd)
+            });
         } catch (err) {
             this.logger.error('npmInstall fail');
             throw err;
