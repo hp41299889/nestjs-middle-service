@@ -1,5 +1,6 @@
 //packages
 import { Controller, Logger, Post, Res, Body, Get, Session } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 //configs
@@ -16,6 +17,7 @@ const {
     queryRoute, //query
 } = jSExecutionLogControllerConfig;
 
+@ApiTags('JSExecutionLog')
 @Controller(prefix)
 export class JSExecutionLogController {
     constructor(

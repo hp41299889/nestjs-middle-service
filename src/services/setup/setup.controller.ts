@@ -1,5 +1,6 @@
 //packages
 import { Controller, Logger, Get, Res, Post, Body, Session, Patch, Req } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 //configs
@@ -19,7 +20,7 @@ const {
     saveRoute,                  //save
 } = setupControllerConfig;
 
-
+@ApiTags('Setup')
 @Controller(prefix)
 export class SetupController {
     constructor(

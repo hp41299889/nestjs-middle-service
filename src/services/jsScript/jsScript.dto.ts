@@ -1,3 +1,5 @@
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
+
 //dtos
 import { ControllerBasicDto } from "src/basics/dtos/config.dto";
 
@@ -11,20 +13,28 @@ export class JSScriptControllerConfigDto extends ControllerBasicDto {
 };
 
 export class CreateOneJSScriptDto {
+    @ApiProperty()
     scriptName: string;
+    @ApiPropertyOptional()
     scriptContent: string;
+    @ApiPropertyOptional()
     scriptPackage?: object;
     scriptSource?: string;
 };
 
 export class UpdateOneJSScriptByIDDto {
+    @ApiProperty()
     scriptID: number;
+    @ApiPropertyOptional()
     scriptName?: string;
+    @ApiPropertyOptional()
     scriptContent?: string;
+    @ApiPropertyOptional()
     scriptPackage?: object;
 };
 
 export class ReadOneJSScriptByIDDto {
+    @ApiProperty()
     scriptID: number;
 };
 

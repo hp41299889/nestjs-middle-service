@@ -1,5 +1,6 @@
 //packages
 import { Controller, Logger, Post, Get, Patch, Delete, Body, Res, Session } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
 //configs
@@ -22,6 +23,7 @@ const {
     testRoute,      //test
 } = jsScriptControllerConfig;
 
+@ApiTags('JSScript')
 @Controller(prefix)
 export class JSScriptController {
     constructor(

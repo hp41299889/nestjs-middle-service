@@ -1,5 +1,6 @@
 //packages
 import { Controller, Logger, Post, Get, Req, Res, Body, Session } from '@nestjs/common';
+import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
 //configs
@@ -19,6 +20,7 @@ const {
     logoutRoute,//logout
 } = authControllerConfig;
 
+@ApiTags('Auth')
 @Controller(prefix)
 export class AuthController {
     constructor(

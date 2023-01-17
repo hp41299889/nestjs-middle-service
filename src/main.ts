@@ -12,27 +12,28 @@ import { appConfig } from './basics/configs/config';
 import { AppModule } from './app.module';
 //dtos
 import { RMQConnectionDto } from './services/setup/setup.dto';
-import { AppConfigDto } from './basics/dtos/config.dto';
 //services
 import { SetupJsonService } from './utils/setupJson/setupJson.service';
+import { SwaggerService } from './basics/swagger/swagger.service';
 
 async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule);
   const { name, prefix, port } = appConfig;
-  registerApplications(app, appConfig);
+  app.setGlobalPrefix(prefix);
+  await registerApplications(app);
   await registerMicroServices(app);
 
-  app.setGlobalPrefix(prefix);
   await app.listen(port);
   console.log(`${name} is running on ${port}`);
 };
 
-const registerApplications = async (app: NestExpressApplication, config: AppConfigDto) => {
+const registerApplications = async (app: NestExpressApplication) => {
+  const swagger = app.get(SwaggerService);
   const staticDir = join(process.cwd(), 'public');
   const viewsDir = join(staticDir, 'views');
   const contentsDir = join(viewsDir, 'contents');
   const partialsDir = join(viewsDir, 'partials');
-  const { sessionKey, sessionLife } = config;
+  const { sessionKey, sessionLife } = appConfig;
 
   app.use(
     session({
@@ -46,6 +47,7 @@ const registerApplications = async (app: NestExpressApplication, config: AppConf
   app.setBaseViewsDir(contentsDir);
   hbs.registerPartials(partialsDir)
   app.setViewEngine('hbs');
+  swagger.setupSwagger(app);
 };
 
 const registerMicroServices = async (app: NestExpressApplication) => {

@@ -5,7 +5,7 @@
     "port": "5672",
     "account": "dannylu",
     "password": "roxy1029",
-    "inputQueueName": "job_queue_output_test",
+    "inputQueueName": "job_queue_output",
     "outputQueueName": "middle_service_output"
   },
   "jobQueue": {
