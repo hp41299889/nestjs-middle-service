@@ -36,7 +36,11 @@ export class AuthController {
     async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
         try {
             this.logger.debug('/Auth/view');
-            await this.httpResponseService.renderView(res, session, 'auth');
+            if (!session.token) {
+                await this.httpResponseService.renderView(res, 'auth');
+            } else {
+                await this.httpResponseService.renderView(res, 'jsScript');
+            };
         } catch (err) {
             this.logger.error('/Auth/view fail');
             this.httpResponseService.fail(res, 400, err);
@@ -67,7 +71,7 @@ export class AuthController {
         try {
             this.logger.debug('/Auth/login');
             if (!session.token) {
-                throw 'you are not login yet';
+                await this.httpResponseService.redirectUrl(res, 200, this.loginRedirectUrl);
             } else {
                 await this.authService.logout(req);
                 await this.httpResponseService.redirectUrl(res, 200, this.logoutRedirectUrl);

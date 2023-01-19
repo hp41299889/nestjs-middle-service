@@ -58,11 +58,11 @@ export class JSScriptModelService {
     };
 
     //TODO more elegant
-    async updateOneByScriptID(dto: UpdateOneJSScriptByIDDto): Promise<UpdateResult> {
+    async updateOneByScriptID(dto: UpdateOneJSScriptByIDDto): Promise<void> {
         try {
             this.logger.debug('updateAJSScriptByScriptID');
             await this.jsScriptRepo.update({ scriptID: dto.scriptID }, dto);
-            return await this.jsScriptRepo.increment({ scriptID: dto.scriptID }, 'scriptVersion', 1);
+            await this.jsScriptRepo.increment({ scriptID: dto.scriptID }, 'scriptVersion', 1);
         } catch (err) {
             this.logger.error('updateAJSScriptByScriptID fail');
             this.logger.error(err);

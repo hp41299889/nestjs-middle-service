@@ -20,7 +20,15 @@ $(document).ready(function () {
     buttons: ['excel'],
     columns: scriptColumns,
     scrollX: true,
+    language: {
+      paginate: {
+        "previous": "上一頁",
+        "next": "下一頁",
+      },
+      lengthMenu: "顯示 _MENU_ 筆",
+    }
   });
+
 
   $('.dt-buttons').addClass('d-none');
 
@@ -55,6 +63,8 @@ function readAll() {
       } else {
         const { data } = result;
         data.map(item => {
+          item.createDatetime = moment(item.createDatetime).utcOffset(960).format('YYYY-MM-DD HH:mm:ss');
+          item.lastEditDatetime = moment(item.lastEditDatetime).utcOffset(960).format('YYYY-MM-DD HH:mm:ss');
           item.scriptPackage = item.scriptPackage ? JSON.stringify(item.scriptPackage) : null;
         });
         table.rows.add(data).draw();
@@ -191,8 +201,16 @@ const createAPI = data => {
     data: data,
     dataType: 'json',
     success: function (response) {
-      console.log(response);
-      location.reload();
+      const { status, result } = response;
+      if (status != 'success') {
+        throw 'status is not success';
+      } else {
+        const { data } = result;
+        data.scriptPackage = data.scriptPackage ? JSON.stringify(data.scriptPackage) : '';
+        data.createDatetime = moment(data.createDatetime).utcOffset(960).format('YYYY-MM-DD HH:mm:ss');
+        data.lastEditDatetime = moment(data.lastEditDatetime).utcOffset(960).format('YYYY-MM-DD HH:mm:ss');
+        table.row.add(data).draw();
+      };
     },
     error: function (xhr) {
       console.log('xhr =', xhr);
@@ -210,8 +228,22 @@ const updateAPI = data => {
     data: data,
     dataType: 'json',
     success: function (response) {
-      console.log(response);
-      location.reload();
+      const { status, result } = response;
+      if (status != 'success') {
+        throw 'status is not success';
+      } else {
+        const { data } = result;
+        const { scriptID } = data;
+        data.createDatetime = moment(data.createDatetime).utcOffset(960).format('YYYY-MM-DD HH:mm:ss');
+        data.lastEditDatetime = moment(data.lastEditDatetime).utcOffset(960).format('YYYY-MM-DD HH:mm:ss');
+        data.scriptPackage = data.scriptPackage ? JSON.stringify(data.scriptPackage) : '';
+        table.row((index, data, node) => {
+          return data.scriptID == scriptID ? true : false;
+        }).data(data).draw();
+        Object.keys(data).forEach(key => {
+          sessionStorage.setItem(key, data[key]);
+        });
+      };
     },
     error: function (xhr) {
       console.log('xhr =', xhr);
@@ -261,6 +293,7 @@ function fillInDelModal() {
 
 //table列的刪除
 function del() {
+  const scriptID = sessionStorage.getItem('scriptID');
   $.ajax({
     url: `${apiUrl}/delete/`,
     type: 'DELETE',
@@ -268,7 +301,18 @@ function del() {
     dataType: 'json',
     success: function (response) {
       console.log(response);
-      location.reload();
+      const { status, result } = response;
+      if (status != 'success') {
+        throw 'status is not success';
+      } else {
+        const { data } = result;
+        const { affected } = data;
+        if (affected == 1) {
+          table.row((index, data, node) => {
+            return data.scriptID == scriptID ? true : false;
+          }).remove().draw();
+        };
+      };
     },
     error: function (xhr) {
       console.log('xhr =', xhr);

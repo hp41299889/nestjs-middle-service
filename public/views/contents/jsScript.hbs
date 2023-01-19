@@ -18,7 +18,7 @@
 <div class='m-4'>
   <h1>JS腳本</h1>
   <div class='cards'>
-    <div class='card'>
+    <div class='card' id="table">
       <div class='card-body'>
         <div class='d-flex'>
           <button type='button' id='add' class='btn btn-outline-primary' data-bs-toggle='modal'
@@ -32,7 +32,7 @@
           <button type='button' id='exportBtn' class='btn btn-outline-primary' onclick="exportExcel()">匯出</button>
         </div>
         <div class='searchBox w-100'>
-          <input id='searchFilter' placeholder='Search' class='searchFilter' />
+          <input id='searchFilter' placeholder='搜尋' class='searchFilter' />
         </div>
         <table id='script' class='display' style='width: 100%'>
           <thead></thead>
@@ -46,7 +46,6 @@
         <div class='item'>
           <div id="js-area" class='card'>
             <span class="title">JavaScript</span>
-            {{!-- <div id="editor" disabled="disabled"></div> --}}
             <div id="script-display"></div>
           </div>
         </div>
@@ -54,7 +53,6 @@
           <div id="items">
             <div class="js">
               <span>輸入:</span>
-              {{!-- <textarea id='script-input' class="script" placeholder="JavaScript"></textarea> --}}
               <div id="script-input"></div>
             </div>
             <div class="js-test-btn">
@@ -62,8 +60,6 @@
             </div>
             <div class="js">
               <span>輸出:</span>
-              {{!-- <textarea id='script-output' class="script" placeholder="JavaScript" disabled="disabled"></textarea>
-              --}}
               <div id="script-output"></div>
             </div>
           </div>
@@ -82,21 +78,19 @@
       </div>
       <div class='modal-body' id='modalBody'>
         <form>
-          <div class='d-flex mb-3 row'>
-            <div class='col-6'>
-              <label for='scriptName' class='col-form-label fw-bolder'>腳本名稱:</label>
-              <input type='text' class='form-control' id='scriptName' aria-describedby='inputGroupPrepend' required />
-              <div class='invalid-feedback'>
-                不可為空
-              </div>
+          <div class='col-6'>
+            <label for='scriptName' class='col-form-label fw-bolder'>腳本名稱:</label>
+            <input type='text' class='form-control' id='scriptName' aria-describedby='inputGroupPrepend' required />
+            <div class='invalid-feedback'>
+              不可為空
             </div>
-            <div class='mb-3'>
-              <label for='scriptPackage' class='col-form-label fw-bolder'>腳本相依套件:JSON</label>
-              {{!-- <textarea class='form-control' id='scriptPackage' placeholder='Text Area' required></textarea> --}}
-              <div id="modal-json"></div>
-              <div class='invalid-feedback'>
-                尚未選擇
-              </div>
+          </div>
+          <div class='mb-3'>
+            <label for='scriptPackage' class='col-form-label fw-bolder'>腳本相依套件:JSON</label>
+            {{!-- <textarea class='form-control' id='scriptPackage' placeholder='Text Area' required></textarea> --}}
+            <div id="modal-json"></div>
+            <div class='invalid-feedback'>
+              尚未選擇
             </div>
           </div>
           <div class='mb-3'>

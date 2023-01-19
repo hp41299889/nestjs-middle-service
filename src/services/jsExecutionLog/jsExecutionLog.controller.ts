@@ -1,5 +1,5 @@
 //packages
-import { Controller, Logger, Post, Res, Body, Get, Session } from '@nestjs/common';
+import { Controller, Logger, Post, Res, Body, Get } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
@@ -29,10 +29,10 @@ export class JSExecutionLogController {
 
     //TODO render view
     @Get(viewRoute)
-    async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
+    async view(@Res() res: Response): Promise<void> {
         try {
             this.logger.debug('/JSExecutionLog/view');
-            await this.httpResponseService.renderView(res, session, 'jsExecutionLog');
+            await this.httpResponseService.renderView(res, 'jsExecutionLog');
         } catch (err) {
             this.logger.error('/JSExecutionLog/view fail');
             this.httpResponseService.fail(res, 400, err);

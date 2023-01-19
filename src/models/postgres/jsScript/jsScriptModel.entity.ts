@@ -15,7 +15,7 @@ export class JSScript {
     @Column()
     scriptSource: string;
 
-    @Column({ unique: true })
+    @Column()
     scriptName: string;
 
     @Column()

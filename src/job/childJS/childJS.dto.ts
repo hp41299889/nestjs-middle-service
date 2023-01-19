@@ -1,8 +1,10 @@
 //packages
-import { ApiPropertyOptional } from "@nestjs/swagger";
+import { ApiProperty, ApiPropertyOptional } from "@nestjs/swagger";
 
 export class JSFileDto {
+    @ApiProperty()
     scriptID?: number;
+    @ApiProperty()
     scriptVersion?: number;
 };
 

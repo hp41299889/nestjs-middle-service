@@ -58,15 +58,15 @@ export class JSScriptService {
         };
     };
 
-    async updateOneByID(dto: UpdateOneJSScriptByIDDto): Promise<UpdateResult> {
+    async updateOneByID(dto: UpdateOneJSScriptByIDDto): Promise<JSScript> {
         try {
             this.logger.debug('updateOneByID');
             await this.preClean(dto);
             const { scriptID } = dto;
-            const result = await this.jsScriptModel.updateOneByScriptID(dto);
+            await this.jsScriptModel.updateOneByScriptID(dto);
             const target = await this.jsScriptModel.readOneByID(scriptID);
             await this.childJSService.gernerateJSFile(target);
-            return result;
+            return target;
         } catch (err) {
             this.logger.error('updateOneByID fail');
             throw err;

@@ -1,5 +1,5 @@
 //packages
-import { Controller, Logger, Post, Get, Patch, Delete, Body, Res, Session } from '@nestjs/common';
+import { Controller, Logger, Post, Get, Patch, Delete, Body, Res } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Response } from 'express';
 
@@ -34,10 +34,10 @@ export class JSScriptController {
     private readonly logger = new Logger(JSScriptController.name);
 
     @Get(viewRoute)
-    async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
+    async view(@Res() res: Response): Promise<void> {
         try {
             this.logger.debug('/JSScript/view');
-            await this.httpResponseService.renderView(res, session, 'jsScript');
+            await this.httpResponseService.renderView(res, 'jsScript');
         } catch (err) {
             this.logger.error('/JSScript/view fail');
             this.httpResponseService.fail(res, 400, err);

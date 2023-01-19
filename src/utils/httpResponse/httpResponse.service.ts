@@ -1,6 +1,6 @@
 //packages
 import { Injectable } from "@nestjs/common";
-import { Request, Response } from "express";
+import { Response } from "express";
 import { join } from "path";
 
 @Injectable()
@@ -34,22 +34,13 @@ export class HttpResponseService {
         };
     };
 
-    async renderView(res: Response, session: Record<string, any>, view: string): Promise<void> {
+    async renderView(res: Response, view: string): Promise<void> {
         try {
-            const sessionAuth = await this.checkSession(session);
-            if (sessionAuth) {
-                if (view == 'auth') {
-                    res.status(200).redirect('/MiddleService/JSScript/view');
-                } else {
-                    res.status(200).render(view, { layout: this.indexLayout, navbar: true });
-                };
+            if (!(view == 'auth')) {
+                res.status(200).render(view, { layout: this.indexLayout, navbar: true });
             } else {
-                if (view == 'auth') {
-                    res.status(200).render('auth', { layout: this.indexLayout, navbar: false });
-                } else {
-                    res.status(200).redirect('/MiddleService/Auth/view');
-                };
-            };
+                res.status(200).render('auth', { layout: this.indexLayout, navbar: false });
+            }
         } catch (err) {
             throw err;
         };
@@ -63,18 +54,6 @@ export class HttpResponseService {
                     url: url
                 }
             });
-        } catch (err) {
-            throw err;
-        };
-    };
-
-    private async checkSession(session: Record<string, any>) {
-        try {
-            if (!session.token) {
-                return false;
-            } else {
-                return true;
-            };
         } catch (err) {
             throw err;
         };

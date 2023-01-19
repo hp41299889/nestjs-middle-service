@@ -52,9 +52,9 @@ export class ChildJSService {
             this.logger.debug('gernerateJSFile');
             const { scriptID, scriptVersion } = dto;
             const jsScript = await this.jsScriptModel.readOneByID(scriptID);
-            const { scriptName, scriptPackage } = jsScript;
-            const cwd = join(this.jsFileDir, scriptName, scriptVersion.toString());
-            const jsFile = join(cwd, `${scriptName}.js`);
+            const { scriptPackage } = jsScript;
+            const cwd = join(this.jsFileDir, scriptID.toString(), scriptVersion.toString());
+            const jsFile = join(cwd, `${scriptID}.js`);
             await this.createJSFile(jsScript, jsFile);
             const initChild = await this.npmInit(cwd);
             await this.npmInstall(initChild, cwd, scriptPackage);
@@ -67,9 +67,9 @@ export class ChildJSService {
 
     private async createJSFile(jsScript: JSScript, jsFileDir: string): Promise<void> {
         try {
-            const { scriptName, scriptVersion, scriptContent } = jsScript;
-            const jsVersionDir = join(this.jsFileDir, scriptName, scriptVersion.toString());
-            await this.createJSVersionDir(scriptName, jsVersionDir);
+            const { scriptID, scriptVersion, scriptContent } = jsScript;
+            const jsVersionDir = join(this.jsFileDir, scriptID.toString(), scriptVersion.toString());
+            await this.createJSVersionDir(scriptID, jsVersionDir);
             if (!existsSync(jsFileDir)) {
                 this.logger.debug('createJSFile');
                 writeFileSync(jsFileDir, scriptContent);
@@ -80,9 +80,9 @@ export class ChildJSService {
         };
     };
 
-    private async createJSVersionDir(scriptName: string, jsVersionDir: string): Promise<void> {
+    private async createJSVersionDir(scriptID: number, jsVersionDir: string): Promise<void> {
         try {
-            const jsDir = join(this.jsFileDir, scriptName);
+            const jsDir = join(this.jsFileDir, scriptID.toString());
             await this.createJSDir(jsDir);
             if (!existsSync(jsVersionDir)) {
                 this.logger.debug('createJSVersionDir');
@@ -175,10 +175,10 @@ export class ChildJSService {
         try {
             this.logger.debug('nodeRun');
             const { scriptName, scriptID } = jsScript;
-            const childLogger = new Logger(scriptName);
-            const cmd = `node ${scriptName}.js`;
+            const childLogger = new Logger(scriptID.toString());
+            const cmd = `node ${scriptID}.js`;
             const cmdArgs = await this.addArgs(cmd, input);
-            const cwd = join(this.jsFileDir, scriptName, jsVersion.toString());
+            const cwd = join(this.jsFileDir, scriptID.toString(), jsVersion.toString());
             this.logger.debug(cmdArgs);
             const child = await this.childService.execChild(cmdArgs, cwd);
             //execute success and child success

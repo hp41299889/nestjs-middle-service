@@ -1,5 +1,5 @@
 //packages
-import { Controller, Logger, Get, Res, Post, Body, Session, Patch, Req } from '@nestjs/common';
+import { Controller, Logger, Get, Res, Post, Body, Patch, Req } from '@nestjs/common';
 import { ApiTags } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 
@@ -32,10 +32,10 @@ export class SetupController {
 
     //TODO render view
     @Get(viewRoute)
-    async view(@Res() res: Response, @Session() session: Record<string, any>): Promise<void> {
+    async view(@Res() res: Response): Promise<void> {
         try {
             this.logger.debug('/Setup/view');
-            await this.httpResponseService.renderView(res, session, 'setup');
+            await this.httpResponseService.renderView(res, 'setup');
         } catch (err) {
             this.logger.error('/Setup/view fail');
             this.httpResponseService.fail(res, 400, err);

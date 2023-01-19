@@ -8,6 +8,13 @@ $(document).ready(function () {
     buttons: ['excel'],
     columns: jsExecutionLogColumns,
     scrollX: true,
+    language: {
+      paginate: {
+        "previous": "上一頁",
+        "next": "下一頁",
+      },
+      lengthMenu: "顯示 _MENU_ 筆",
+    }
   });
 
   $('.dt-buttons').addClass('d-none');
@@ -27,6 +34,7 @@ $(document).ready(function () {
   datePickerPosition();
   datePickerBlur();
   dateRangeOptionChoice();
+  jsScriptOptionCreate();
 });
 
 //當前時間
@@ -93,6 +101,34 @@ function dateRangeOptionChoice() {
 }
 //--
 
+const jsScriptOptionCreate = () => {
+  const jsScriptSelect = document.getElementById('jsScript');
+  let options = '';
+  $.ajax({
+    url: '/MiddleService/JSScript/readAll',
+    type: 'GET',
+    dataTpye: 'json',
+    success: res => {
+      const { status, result } = res;
+      if (status != 'success') {
+        throw 'status is not success';
+      } else {
+        const { data } = result;
+        data.forEach(element => {
+          const { scriptID, scriptName } = element;
+          options += '<option>';
+          options += `${scriptID}.${scriptName}`;
+          options += '</option>';
+        });
+        jsScriptSelect.innerHTML = options;
+      };
+    },
+    error: err => {
+      console.log(err);
+    }
+  });
+};
+
 //查詢
 function query() {
   const dateVal = $('#date').val();
@@ -114,6 +150,9 @@ function query() {
         throw 'status is not success';
       } else {
         const { data } = result;
+        data.forEach(element => {
+          element['processDatetime'] = moment(element.processDatetime).utcOffset(480).format('YYYY-MM-DD HH:mm:ss');
+        });
         table.rows.add(data).draw();
       }
     },
