@@ -97,7 +97,7 @@ export class JSScriptService {
     private async preClean(dto: PreDto): Promise<void> {
         try {
             dto.scriptContent = await this.commonService.uglifyContent(dto.scriptContent);
-            dto.scriptPackage = dto.scriptPackage ? dto.scriptPackage : null;
+            dto.scriptPackage = Object.keys(dto.scriptPackage).length ? dto.scriptPackage : null;
         } catch (err) {
             throw err;
         };

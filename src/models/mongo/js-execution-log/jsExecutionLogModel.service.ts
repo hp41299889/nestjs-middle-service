@@ -50,7 +50,7 @@ export class JSExecutionLogModelService {
                 .where('processDatetime').gt(startTime).lt(endTime)
                 .exec();
             docs.map(doc => {
-                doc.logID = JSON.stringify(doc._id);
+                doc.logID = JSON.stringify(doc._id).replace(/"/gm, '');
             });
             return docs;
         } catch (err) {

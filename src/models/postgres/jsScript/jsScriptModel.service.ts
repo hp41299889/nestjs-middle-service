@@ -38,7 +38,11 @@ export class JSScriptModelService {
     async readAll(): Promise<JSScript[]> {
         try {
             this.logger.debug('readAllJSScript');
-            return await this.jsScriptRepo.find();
+            return await this.jsScriptRepo.find({
+                order: {
+                    scriptID: 'ASC'
+                }
+            });
         } catch (err) {
             this.logger.error('readAllJSScript fail');
             this.logger.error(err);

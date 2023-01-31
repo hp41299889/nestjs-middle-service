@@ -184,48 +184,42 @@ export class ChildJSService {
             //execute success and child success
             child.stdout.on('data', data => {
                 childLogger.debug(data);
-                const param = JSON.stringify(input);
-                const childReturn = JSON.stringify(data);
                 const jsExecutionLog: CreateJSExecutionLogDto = {
                     scriptID: scriptID,
                     scriptName: scriptName,
                     scriptVersion: jsVersion,
                     processDatetime: new Date(),
-                    processParam: param,
+                    processParam: input ? JSON.stringify(input).replace(/"/gm, '') : null,
                     processStatus: 'Success',
-                    processReturn: childReturn
+                    processReturn: typeof (data) === 'string' ? data.replace(/(\r\n|\n|\r)/gm, '') : data
                 };
                 this.jsExecutionLogModel.createOne(jsExecutionLog);
             });
             //execute success but child fail
             child.stdout.on('error', error => {
                 childLogger.error(error);
-                const param = JSON.stringify(input);
-                const childReturn = JSON.stringify(error);
                 const jsExecutionLog: CreateJSExecutionLogDto = {
                     scriptID: scriptID,
                     scriptName: scriptName,
                     scriptVersion: jsVersion,
                     processDatetime: new Date(),
-                    processParam: param,
+                    processParam: input ? JSON.stringify(input).replace(/"/gm, '') : null,
                     processStatus: 'Success',
-                    processReturn: childReturn
+                    processReturn: JSON.stringify(error).replace(/(\r\n|\n|\r)/gm, '')
                 };
                 this.jsExecutionLogModel.createOne(jsExecutionLog);
             });
             //execute fail
             child.stderr.on('error', error => {
                 childLogger.error(error);
-                const param = JSON.stringify(input);
-                const childReturn = JSON.stringify(error);
                 const jsExecutionLog: CreateJSExecutionLogDto = {
                     scriptID: scriptID,
                     scriptName: scriptName,
                     scriptVersion: jsVersion,
                     processDatetime: new Date(),
-                    processParam: param,
+                    processParam: input ? JSON.stringify(input).replace(/"/gm, '') : null,
                     processStatus: 'Fail',
-                    processReturn: childReturn
+                    processReturn: JSON.stringify(error).replace(/(\r\n|\n|\r)/gm, '')
                 };
                 this.jsExecutionLogModel.createOne(jsExecutionLog);
             });

@@ -9,8 +9,8 @@ export class JSExecutionLogControllerConfigDto extends ControllerBasicDto {
 };
 
 export class QueryJSExecutionLogDto {
-    @ApiProperty()
+    @ApiProperty({ default: new Date().toLocaleDateString() })
     startDate: string;
-    @ApiProperty()
+    @ApiProperty({ default: 'day' })
     dateInterval: 'day' | 'week' | 'month' | 'year';
 };

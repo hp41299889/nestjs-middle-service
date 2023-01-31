@@ -1,5 +1,5 @@
 const apiUrl = '/MiddleService/JSScript';
-const formatOption = { indent_size: 2, space_in_empty_paren: true }
+const formatOption = { indent_size: 2, space_in_empty_paren: true };
 let table;
 let datas = {};
 let state = '';
@@ -20,6 +20,7 @@ $(document).ready(function () {
     buttons: ['excel'],
     columns: scriptColumns,
     scrollX: true,
+    autoWidth: false,
     language: {
       paginate: {
         "previous": "上一頁",
@@ -29,7 +30,7 @@ $(document).ready(function () {
     }
   });
 
-
+  // $('#script').addClass('nowrap');
   $('.dt-buttons').addClass('d-none');
 
   //搜尋框自訂義
@@ -65,7 +66,7 @@ function readAll() {
         data.map(item => {
           item.createDatetime = moment(item.createDatetime).utcOffset(960).format('YYYY-MM-DD HH:mm:ss');
           item.lastEditDatetime = moment(item.lastEditDatetime).utcOffset(960).format('YYYY-MM-DD HH:mm:ss');
-          item.scriptPackage = item.scriptPackage ? JSON.stringify(item.scriptPackage) : null;
+          item.scriptPackage = item.scriptPackage ? JSON.stringify(item.scriptPackage, null, 1) : null;
         });
         table.rows.add(data).draw();
       };

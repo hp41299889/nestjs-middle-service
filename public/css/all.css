@@ -152,9 +152,15 @@
   white-space: nowrap;
 }
 
-.dataTables_scroll .dataTables_scrollBody .display.dataTable.no-footer {
-  white-space: normal;
-  word-break: break-all;
+#script td {
+  max-width: 120px;
+}
+
+#script td:nth-child(4) {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 110px;
 }
 
 .rabbitMqUser,
